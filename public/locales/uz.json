@@ -1,5 +1,6 @@
 {
   "search": "Qidirish",
+
   "header": {
     "profile": "Profil",
     "login": "Kirish",
@@ -15,5 +16,18 @@
       "forgotPassword": "Parolni unutdingizmi?"
     },
     "desc": "Profilga kirib qulay, tezroq va moslashtirilgan xariddan foydalaning"
+
+  "footer": {
+    "title1": "Biz haqimizda",
+    "title2": "Filiallarimiz",
+    "title3": "Chegirmalar",
+    "title4": "Foydalanish shartlari",
+    "title5": "Kontakt",
+    "title6": "Ko’p so’raladigan savollar",
+    "title7": "Yetkazib berish",
+    "title8": "Qaytarib olish",
+    "title9": "To’lov",
+    "title10": "Karera"
+
   }
 }
