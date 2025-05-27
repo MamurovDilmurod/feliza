@@ -4,7 +4,7 @@ import Footer from "./footer";
 
 const MainLayout = () => {
   return (
-    <div className="max-w-[1440px] mx-auto border">
+    <div className="max-w-[1440px] mx-auto">
       <header>
         <Header />
       </header>
