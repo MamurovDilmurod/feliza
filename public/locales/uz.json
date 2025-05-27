@@ -1,5 +1,22 @@
 {
   "search": "Qidirish",
+
+  "header": {
+    "profile": "Profil",
+    "login": "Kirish",
+    "register": {
+      "title": "Ro'yxatdan o'tish",
+      "name": "Ismingiz",
+      "phone": "Telefon raqamingiz",
+      "dateOfBirth": "Tug'ilgan sana",
+      "password": "Parol",
+      "passwordWarning": "Parol 6 ta belgidan kam bo'lmasligi kerak",
+      "male": "Erkak",
+      "female": "Ayol",
+      "forgotPassword": "Parolni unutdingizmi?"
+    },
+    "desc": "Profilga kirib qulay, tezroq va moslashtirilgan xariddan foydalaning"
+
   "footer": {
     "title1": "Biz haqimizda",
     "title2": "Filiallarimiz",
@@ -11,5 +28,6 @@
     "title8": "Qaytarib olish",
     "title9": "To’lov",
     "title10": "Karera"
+
   }
 }

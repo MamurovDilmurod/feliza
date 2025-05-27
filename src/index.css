@@ -1,6 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Tenor+Sans&display=swap");
 @import "tailwindcss";
 
 @theme {
+  --font-tenor: "Tenor Sans", sans-serif;
   --color-primary: #0d0d0d;
   --color-secondary: #5b5b5b;
   --color-accent: #858585;
