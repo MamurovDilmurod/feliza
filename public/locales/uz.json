@@ -16,7 +16,7 @@
       "forgotPassword": "Parolni unutdingizmi?"
     },
     "desc": "Profilga kirib qulay, tezroq va moslashtirilgan xariddan foydalaning"
-
+  },
   "footer": {
     "title1": "Biz haqimizda",
     "title2": "Filiallarimiz",
@@ -28,6 +28,5 @@
     "title8": "Qaytarib olish",
     "title9": "To’lov",
     "title10": "Karera"
-
   }
 }
