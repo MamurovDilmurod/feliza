@@ -1,0 +1,140 @@
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { IoIosHeartEmpty } from "react-icons/io";
+import { useGetList } from '../../services/query/useGetList';
+import { endpoints } from '../../configs/endpoints';
+import { message } from 'antd';
+
+function CategoryDetail() {
+    const { id } = useParams();
+    const { i18n } = useTranslation();
+
+    const [page, setPage] = useState(0);
+    const [products, setProducts] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+
+    const {
+        data,
+        isLoading,
+        isFetching,
+    } = useGetList(
+        endpoints.products.getProductByCategoryId + id,
+        { page, size: 20 },
+    );
+
+    const { data: categoryList } = useGetList(endpoints.category.categoryBlocks.getCategoryByBlockTypeMenu_1, {});
+    const category = categoryList?.find(item => item.category.id == id)?.category;
+
+    useEffect(() => {
+        if (data?.content?.length) {
+            if (page === 0) {
+                setProducts(data.content);
+            } else {
+                setProducts(prev => [...prev, ...data.content]);
+            }
+            if (data.content.length < 20) {
+                setHasMore(false);
+            }
+        }
+    }, [data]);
+
+    const loadMoreProducts = () => {
+        setPage(prev => prev + 1);
+    };
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = () => {
+        messageApi.success(
+            i18n.language === 'uz' ? 'Mahsulot savatchaga qo`shildi' :
+                i18n.language === 'ru' ? 'Товар добавлен в корзину' :
+                    '',
+        );
+    };
+
+    if (isLoading && page === 0) {
+        return (
+            <div className="text-center py-10 text-gray-500 text-lg font-medium">
+                {i18n.language === 'uz' ? 'Yuklanmoqda...' :
+                    i18n.language === 'ru' ? 'Загрузка...' : ""
+                }
+            </div>
+        );
+    }
+
+    const totalProducts = data?.totalElements || products?.length || 0;
+
+    return (
+        <div className="max-w-[1280px] mx-auto px-4 py-8 font-tenor">
+            {contextHolder}
+            <h2 className="text-2xl font-bold text-gray-800 mb-1">
+                {i18n.language === 'uz' ? category?.nameUZB : category?.nameRUS}
+            </h2>
+            <p className="mb-6 text-gray-600 ">
+                {i18n.language === 'uz' ? `Jami mahsulotlar soni: ${totalProducts} ta` :
+                    i18n.language === 'ru' ? `Всего товаров: ${totalProducts} шт` :
+                        `Total products: ${totalProducts} шт`}
+            </p>
+            <div className="border-y w-full  border-stone-400"></div> <br />
+
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {products.map((item, index) => {
+                    const hasDiscount = item.sale > 0;
+                    return (
+                        <div
+                            key={index}
+                            className="bg-white shadow-md overflow-hidden relative hover:shadow-sm transition-shadow duration-300"
+                        >
+                            <button className="absolute top-3 right-3 z-10 bg-white rounded-full p-1 hover:shadow-lg">
+                                <IoIosHeartEmpty onClick={success} className="text-black cursor-pointer hover:text-red-600 w-6 h-6" />
+                            </button>
+
+                            {hasDiscount && (
+                                <div className="absolute top-4 left-3 z-20 bg-[#EEB415] text-white text-xs font-bold px-2 py-1 rounded">
+                                    {item.sale}%
+                                </div>
+                            )}
+
+                            <img
+                                src={item?.productImages?.[0]?.url}
+                                alt={i18n.language === 'uz' ? item.nameUZB : item.nameRUS}
+                                className="w-full h-[365px] object-cover"
+                            />
+
+                            <div className="p-4 space-y-1">
+                                <h2 className="text-md font-semibold text-gray-800 line-clamp-1">
+                                    {i18n.language === 'uz' ? item.nameUZB : item.nameRUS}
+                                </h2>
+                                <div className="text-gray-900 font-semibold space-x-2">
+                                    {hasDiscount ? (
+                                        <>
+                                            <span className="text-gray-600">{item.salePrice} so’m</span><br />
+                                            <span className="text-sm text-red-500 line-through">{item.sellPrice} so’m</span>
+                                        </>
+                                    ) : (
+                                        <span>{item.sellPrice} so’m</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {hasMore && (
+                <div className="flex justify-center mt-4">
+                    <button
+                        onClick={loadMoreProducts}
+                        className='py-2 px-16 border border-[#5B5B5B] cursor-pointer  rounded-sm hover:bg-[#5B5B5B] hover:text-white transition-colors duration-500'
+                        disabled={isFetching}
+                    >
+                        {i18n.language === 'uz' ? 'Yana ko‘proq ko‘rish' : i18n.language === 'ru' ? 'Показать больше' : 'Show more'}
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default CategoryDetail;

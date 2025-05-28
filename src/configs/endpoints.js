@@ -19,6 +19,13 @@ export const endpoints = {
     getAllBrands: "",
     getBrandById: "",
   },
-  category: {},
-  products: {},
+  category: {
+    categoryBlocks: {
+      getCategoryByBlockTypeMenu_1: "/api/categoryBlock/getAllByCategoryBlockType/MENU_1",
+      getCategoryByBlockTypeMenu_2: "/api/categoryBlock/getAllByCategoryBlockType/MENU_2",
+    }
+  },
+  products: {
+    getProductByCategoryId: "/api/product/getProductByCategoryId/",
+  },
 };
