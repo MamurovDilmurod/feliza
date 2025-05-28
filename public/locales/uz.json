@@ -13,7 +13,11 @@
       "passwordWarning": "Parol 6 ta belgidan kam bo'lmasligi kerak",
       "male": "Erkak",
       "female": "Ayol",
-      "forgotPassword": "Parolni unutdingizmi?"
+      "forgotPassword": "Parolni unutdingizmi?",
+      "enterPassword": "Parolni kiriting",
+      "titleSms": "Telefon raqamingizga yuborilgan 4 xonali kodni kiriting",
+      "continue": "Davom etish",
+      "confirm": "Tasdiqlash"
     },
     "desc": "Profilga kirib qulay, tezroq va moslashtirilgan xariddan foydalaning"
   },

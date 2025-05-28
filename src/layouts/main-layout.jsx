@@ -5,7 +5,7 @@ import Footer from "./footer";
 const MainLayout = () => {
   return (
     <div className="max-w-[1440px] mx-auto">
-      <header>
+      <header className="sticky top-0 z-50 bg-white">
         <Header />
       </header>
       <main>
