@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { request } from "../../config/request";
+import { request } from "../../configs/request";
 
 export const useCreate = (endpoint, queryKey) => {
   const queryClient = useQueryClient();
