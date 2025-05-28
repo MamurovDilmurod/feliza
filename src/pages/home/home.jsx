@@ -1,6 +1,10 @@
+import Menu1CategoryList from "../../components/MenuCategoryList/Menu1CategoryList";
+
 const Home = () => {
   return <div>
-    <h1>Home</h1>
+    <h1 >
+      <Menu1CategoryList />
+    </h1>
   </div>;
 };
 

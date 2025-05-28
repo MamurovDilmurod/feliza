@@ -19,7 +19,7 @@ const Footer = () => {
     { href: "https://www.youtube.com/@feliza_uz6743/featured", icon: <IoLogoYoutube /> },
   ];
   return (
-    <div className="max-w-[1280px] mx-auto pt-24 pb-10 px-4">
+    <div className="max-w-[1280px] mx-auto pt-24 pb-10 px-4 font-tenor">
       <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
         <span className="border-y w-full lg:w-[562px] border-stone-400"></span>
         <img src={feliza_logo} alt="Feliza logo" className='w-20' />
