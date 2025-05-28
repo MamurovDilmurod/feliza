@@ -22,15 +22,4 @@ request.interceptors.request.use((config) => {
   return config;
 });
 
-request.interceptors.response.use(
-  (res) => res,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("FELIZA-TOKEN");
-      window.location.href = "/";
-    }
-    return Promise.reject(error);
-  }
-);
-
 export { request };
