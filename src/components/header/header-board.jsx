@@ -1,12 +1,21 @@
+import { Link, useNavigate } from "react-router-dom";
 import { useGetList } from "../../services/query/useGetList";
 import { useTranslation } from "react-i18next";
 
-export const HeaderBoard = ({ brand }) => {
+export const HeaderBoard = ({ brand, setShowBoard, setBrandName }) => {
+  const navigate = useNavigate();
   const { i18n } = useTranslation();
   const { data, isLoading } = useGetList(
     "/api/categories/getSubCategoriesByParent/" + brand,
     {}
   );
+  console.log(data);
+
+  const handleNavigate = (id) => {
+    setShowBoard(false);
+    setBrandName("");
+    navigate(`categoryDetail/${id}`);
+  };
 
   return (
     <div className="min-h-[430px] h-fit absolute bg-white w-full">
@@ -21,9 +30,11 @@ export const HeaderBoard = ({ brand }) => {
               key={index}
               className="break-inside-avoid p-2 h-full border-r pl-10"
             >
-              <p className="font-tenor font-normal text-base text-secondary hover:text-primary cursor-pointer">
-                {i18n.language == "uz" ? item.nameUZB : item.nameRUS}
-              </p>
+              <button onClick={() => handleNavigate(item.id)}>
+                <p className="font-tenor font-normal text-base text-secondary hover:text-primary cursor-pointer">
+                  {i18n.language == "uz" ? item.nameUZB : item.nameRUS}
+                </p>
+              </button>
             </div>
           ))}
         </div>

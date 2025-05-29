@@ -1,6 +1,7 @@
 import Header from "./header";
 import { Outlet } from "react-router-dom";
 import Footer from "./footer";
+import { MobileBottomTab } from "../components/header/mobile-bottom-tab";
 
 const MainLayout = () => {
   return (
@@ -13,6 +14,9 @@ const MainLayout = () => {
       </main>
       <footer>
         <Footer />
+        <div className="w-full fixed bottom-0">
+          <MobileBottomTab />
+        </div>
       </footer>
     </div>
   );
