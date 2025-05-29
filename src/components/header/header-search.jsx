@@ -13,7 +13,7 @@ export const HeaderSearch = ({ setShowSearch }) => {
           placeholder={t("search")}
         />
         <Button
-          className="!absolute right-20 top-14"
+          className="!absolute right-3 lg:right-20 top-3 lg:top-14"
           icon={<IoMdClose size={21} />}
           onClick={() => setShowSearch(false)}
           children="Yopish"
