@@ -8,19 +8,35 @@ function Menu1CategoryList() {
     const { data, isLoading } = useGetList(endpoints.category.categoryBlocks.getCategoryByBlockTypeMenu_1, {});
     const { i18n } = useTranslation();
 
+    const skeletonItems = Array.from({ length: 5 });
+
     if (isLoading) {
-        return <div className="text-center py-10 text-gray-500">Yuklanmoqda...</div>;
+        return (
+            <div className="max-w-[1280px] mx-auto px-4 py-8 overflow-x-auto scrollbar-hide">
+                <div className="flex gap-6 w-max">
+                    {skeletonItems.map((_, index) => (
+                        <div
+                            key={index}
+                            className="min-w-[220px] h-[240px] bg-gray-200 rounded-md animate-pulse"
+                        />
+                    ))}
+                </div>
+            </div>
+        );
     }
 
     const sortedData = [...data].sort((a, b) => a.placementNumber - b.placementNumber);
+
     return (
-        <div className="max-w-[1280px] mx-auto px-4 py-8">
-            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 font-tenor">
+        <div className="max-w-[1280px] mx-auto px-4 py-8 overflow-x-auto scrollbar-hide" style={{
+            scrollbarWidth: "none"
+        }}>
+            <div className="flex gap-6 font-tenor w-max">
                 {sortedData.map((item, index) => (
                     <div
                         onClick={() => navigate(`/categoryDetail/${item.category.id}`)}
                         key={index}
-                        className="relative group overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+                        className="min-w-[220px] relative group overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
                     >
                         <img
                             src={item.category.horizontalImage?.url}
@@ -36,7 +52,7 @@ function Menu1CategoryList() {
                 ))}
             </div>
         </div>
-    )
+    );
 }
 
 export default Menu1CategoryList;
