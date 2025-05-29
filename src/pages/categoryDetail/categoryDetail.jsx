@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetList } from '../../services/query/useGetList';
 import { endpoints } from '../../configs/endpoints';
-import { message } from 'antd';
 import ProductCard from '../../components/ProductCart/ProductCard';
 
 function CategoryDetail() {
@@ -37,15 +36,6 @@ function CategoryDetail() {
 
     const loadMoreProducts = () => setPage(prev => prev + 1);
 
-    const [messageApi, contextHolder] = message.useMessage();
-    const success = () => {
-        messageApi.success(
-            i18n.language === 'uz' ? 'Mahsulot savatchaga qo`shildi' :
-                i18n.language === 'ru' ? 'Товар добавлен в корзину' :
-                    ''
-        );
-    };
-
     if (isLoading && page === 0) {
         return (
             <div className="text-center py-10 text-gray-500 text-lg font-medium">
@@ -54,12 +44,10 @@ function CategoryDetail() {
             </div>
         );
     }
-
     const totalProducts = data?.totalElements || products?.length || 0;
 
     return (
         <div className="max-w-[1280px] mx-auto px-4 py-8 font-tenor">
-            {contextHolder}
             <h2 className="text-2xl font-bold text-gray-800 mb-1">
                 {i18n.language === 'uz' ? category?.nameUZB : category?.nameRUS}
             </h2>
@@ -73,7 +61,7 @@ function CategoryDetail() {
 
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {products.map((item, index) => (
-                    <ProductCard key={index} item={item} onLike={success} />
+                    <ProductCard key={index} item={item} />
                 ))}
             </div>
 
