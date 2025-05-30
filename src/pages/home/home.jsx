@@ -2,6 +2,7 @@ import Menu1CategoryList from "../../components/MenuCategoryList/Menu1CategoryLi
 import Menu2CategoryList from "../../components/MenuCategoryList/Menu2CategoryList";
 import BannerCarausel from "../../components/header/banner-carausel";
 import { SmallSlider } from "../../components/home/smallSlider";
+import HomeLooks from "../../components/looks/home-looks";
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
       <SmallSlider palcement={1} />
       <Menu2CategoryList />
       <SmallSlider palcement={2} />
+      <HomeLooks />
       <SmallSlider palcement={3} />
       <SmallSlider palcement={4} />
       <SmallSlider palcement={5} />
