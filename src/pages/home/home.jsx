@@ -1,6 +1,7 @@
 import Menu1CategoryList from "../../components/MenuCategoryList/Menu1CategoryList";
 import Menu2CategoryList from "../../components/MenuCategoryList/Menu2CategoryList";
 import BannerCarausel from "../../components/header/banner-carausel";
+import NessaHome from "../../components/home/NessaHome";
 import { SmallSlider } from "../../components/home/smallSlider";
 
 const Home = () => {
@@ -17,6 +18,7 @@ const Home = () => {
       <SmallSlider palcement={6} />
       <SmallSlider palcement={7} />
       <SmallSlider palcement={8} />
+      <NessaHome />
     </div>
   );
 };

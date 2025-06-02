@@ -39,7 +39,7 @@ function Menu2CategoryList() {
                 <div
                     onClick={() => navigate(`/categoryDetail/${item.category.id}`)}
                     key={indx}
-                    className="flex-shrink-0 w-[360px] cursor-pointer group relative mr-2"
+                    className="flex-shrink-0 md:w-[360px] w-[240px] cursor-pointer group relative mr-2"
                 >
                     <img
                         src={item.category.verticalImage?.url}
@@ -48,7 +48,7 @@ function Menu2CategoryList() {
                                 ? item.category.nameUZB
                                 : item.category.nameRUS
                         }
-                        className="w-full h-[564px] object-cover"
+                        className="w-full h-[400px] md:h-[564px] object-cover"
                     />
                     <div className="absolute inset-0 bg-[#0000004D] group-hover:bg-transparent flex items-center group-hover:items-end justify-center transition-all duration-500">
                         <h2 className="text-white group-hover:text-[#0D0D0D] text-2xl w-[100px] font-bold text-center group-hover:mb-4 mb-0 px-2">

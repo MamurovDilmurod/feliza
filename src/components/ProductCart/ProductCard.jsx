@@ -3,12 +3,14 @@ import { IoIosHeartEmpty } from "react-icons/io";
 import { useTranslation } from 'react-i18next';
 import { RiShoppingBag4Line } from "react-icons/ri";
 import { message } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const ProductCard = ({ item, onLike }) => {
     const { i18n } = useTranslation();
     const hasDiscount = item.sale > 0;
+    const navigate = useNavigate();
 
     const [messageApi, contextHolder] = message.useMessage();
     const success = () => {
@@ -35,7 +37,7 @@ const ProductCard = ({ item, onLike }) => {
             <img
                 src={item?.productImages?.[0]?.url}
                 alt={i18n.language === 'uz' ? item.nameUZB : item.nameRUS}
-                className="w-full md:h-[365px] h-auto object-cover"
+                className="w-full md:h-[365px] h-auto object-cover cursor-pointer"
             />
             <div className='flex items-center justify-between'>
                 <div className="p-4 space-y-1">

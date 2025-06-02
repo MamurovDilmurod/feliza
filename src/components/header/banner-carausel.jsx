@@ -17,8 +17,8 @@ const BannerCarausel = () => {
           pauseOnHover={false}
           lazyLoad="progressive"
           draggable
-          // easing="linear"
-          // effect="fade"
+        // easing="linear"
+        // effect="fade"
         >
           {data?.map((item) => (
             <div
@@ -26,7 +26,7 @@ const BannerCarausel = () => {
               onClick={() =>
                 navigate(
                   item.karuselType == "category_id" &&
-                    `/categoryDetail/${item.parameterId}`
+                  `/categoryDetail/${item.parameterId}`
                 )
               }
               key={item.id}
