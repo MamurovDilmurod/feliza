@@ -3,14 +3,15 @@ import { BiCategory } from "react-icons/bi";
 import { FaRegHeart, FaRegUser } from "react-icons/fa6";
 import { LuShoppingBag } from "react-icons/lu";
 import FeIcon from "./fe-icon";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const MobileBottomTab = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const menuList = [
     {
       path: "/",
-      icon: <FeIcon color={"#0d0d0d"} />,
+      icon: <FeIcon color={location.pathname == "/" ? "#0d0d0d" : "#5b5b5b"} />,
     },
     {
       path: "/categoty",
@@ -30,10 +31,15 @@ export const MobileBottomTab = () => {
     },
   ];
   return (
-    <div className=" bg-white z-[999] p-2 lg:hidden">
+    <div className=" bg-white z-[999] p-2 py-6 lg:hidden">
       <div className="flex justify-between items-center px-3">
         {menuList.map((item) => (
           <Button
+            onClick={() => (
+              navigate(item.path),
+              window.scrollTo({ top: 0, behavior: "smooth" })
+            )}
+            key={item.path}
             className={`!border-none ${
               location.pathname == item.path
                 ? "!text-primary"

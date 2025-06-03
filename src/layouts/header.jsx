@@ -44,24 +44,24 @@ const Header = () => {
       <div className="hidden lg:flex items-center justify-between  max-w-[1280px] px-3 mx-auto py-5">
         <div className="hidden md:flex items-center justify-between gap-12">
           <p
-            className="font-normal text-xl pb-2"
+            className="font-tenor font-normal text-xl pb-2 cursor-pointer"
             style={{
               borderBottom: brandName == "Kiyimlar" && "1px solid black",
             }}
             onClick={() => handleBoard("Kiyimlar")}
           >
-            Katalog
+            {t("header.catalog")}
           </p>
           <p
-            className="font-normal text-xl pb-2"
+            className="font-tenor font-normal text-xl pb-2 cursor-pointer"
             style={{ borderBottom: brandName == "Nessa" && "1px solid black" }}
             onClick={() => handleBoard("Nessa")}
           >
-            Nessa
+            {t("header.nessa")}
           </p>
 
           <p
-            className="flex items-center gap-2 text-secondary font-normal text-xs leading-[100%]"
+            className="flex items-center gap-2 text-secondary font-normal text-xs leading-[100%] cursor-pointer"
             onClick={() => (
               setShowSearch(true), setShowBoard(false), setBrandName("")
             )}
@@ -97,7 +97,7 @@ const Header = () => {
       >
         <div className="flex flex-col justify-center absolute text-center w-full align-middle transition-all duration-1000 gap-3">
           <div className="w-full flex justify-center text-white px-2">
-            <img className={scrolled && "scale-75"} src={Logo} />
+            <img className={scrolled ? "scale-75" : ""} src={Logo} />
           </div>
 
           {scrolled ? (
