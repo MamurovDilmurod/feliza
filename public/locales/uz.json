@@ -1,9 +1,13 @@
 {
   "search": "Qidirish",
-
+  "see-all": "Barchasini ko’rish",
+  "product-not-found": "Mahsulot Topilmadi",
   "header": {
     "profile": "Profil",
     "login": "Kirish",
+    "catalog": "Katalog",
+    "nessa": "Nessa",
+    "close": "Yopish",
     "register": {
       "title": "Ro'yxatdan o'tish",
       "name": "Ismingiz",
@@ -20,6 +24,19 @@
       "confirm": "Tasdiqlash"
     },
     "desc": "Profilga kirib qulay, tezroq va moslashtirilgan xariddan foydalaning"
+  },
+  "looks": {
+    "title": "Looklar",
+    "desc": "Galereyamizdan ilhom oling va ijtimoiy tarmoqlarda @feliza va #felizastyle bilan o’z  ko’rinishingizni ulashing.",
+    "see": "Ko'rish:",
+    "all": "Barcha looklar",
+    "message": "Lookga ega bo'ling!",
+    "smillar": "Boshqa looklarni ham ko'ring",
+    "product": "mahsulot",
+    "home": {
+      "title": "Looklarni ko'ring",
+      "btn": "Looklarni ko’ring"
+    }
   },
   "footer": {
     "title1": "Biz haqimizda",
