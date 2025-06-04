@@ -17,6 +17,7 @@ function CategoryDetail() {
         endpoints.products.getProductByCategoryId + id,
         { page, size: 20 }
     );
+    // console.log("detail page uchun korgazma", data);
 
     const { data: categoryList } = useGetList(endpoints.category.categoryBlocks.getCategoryByBlockTypeMenu_1, {});
     const category = categoryList?.find(item => item.category.id == id)?.category;

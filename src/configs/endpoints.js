@@ -27,5 +27,7 @@ export const endpoints = {
   },
   products: {
     getProductByCategoryId: "/api/product/getProductByCategoryId/",
+    getProductById: '/api/product/getProductById/',
+    searchProduct: '/api/product/searchProduct/',
   },
 };
