@@ -10,6 +10,8 @@ import UserAuth from "../components/header/user-auth";
 import { HeaderBoard } from "../components/header/header-board";
 import { HeaderSearch } from "../components/header/header-search";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useGetList } from "../services/query/useGetList";
+import Cookies from "js-cookie";
 
 const Header = () => {
   const location = useLocation();
@@ -18,6 +20,9 @@ const Header = () => {
   const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate();
   const [brandName, setBrandName] = useState("");
+
+  const userID = Cookies.get("USER-ID");
+  const { data } = useGetList("/api/cartItem/byCustomerId/" + userID);
 
   const handleBoard = (name) => {
     setShowSearch(false);
@@ -81,9 +86,14 @@ const Header = () => {
               }}
               style={{ border: "1px solid black" }}
               color="white"
-              count={5}
+              className="!font-tenor !text-xs"
+              count={data?.length}
             >
-              <LuShoppingBag size={21} />
+              <LuShoppingBag
+                onClick={() => navigate("/cart")}
+                className="cursor-pointer"
+                size={21}
+              />
             </Badge>
             <UserAuth />
             <LanguageSelector />
