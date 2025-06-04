@@ -187,7 +187,7 @@ function ProductDetail() {
                             )}
                         </div>
 
-                        <hr className='border-gray-300 md:my-10 my-2' />
+                        <hr className='border-gray-300 md:my-7 my-2' />
 
                         {/* Qo’shimcha ma’lumotlar */}
                         <div onClick={() => setIsOpen(!isOpen)} className='cursor-pointer select-none'>
@@ -202,7 +202,7 @@ function ProductDetail() {
                             )}
                         </div>
 
-                        <hr className='border-gray-300 md:my-10 my-2' />
+                        <hr className='border-gray-300 md:my-7 my-2' />
 
                         {/* To'lov haqida */}
                         <div>

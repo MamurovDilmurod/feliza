@@ -21,4 +21,9 @@ export const routes = [
     path: "/productDetail/:id",
     element: React.lazy(() => import("../pages/ProductDetail/ProductDetail")),
   },
+  {
+
+    path: "/searchResult",
+    element: React.lazy(() => import("../pages/searchResult/serachResult")),
+  }
 ];

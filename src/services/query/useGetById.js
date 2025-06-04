@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { request } from "../../config/request";
+import { request } from "../../configs/request";
 
 export const useGetById = (endpoint, id, params = {}) => {
   return useQuery({

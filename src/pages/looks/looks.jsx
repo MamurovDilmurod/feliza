@@ -5,9 +5,11 @@ import { LiaGripVerticalSolid } from "react-icons/lia";
 import { Button, Skeleton } from "antd";
 import { useState } from "react";
 import { CiGrid2H } from "react-icons/ci";
+import { useTranslation } from "react-i18next";
 
 const Looks = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { data, isLoading } = useGetList(
     "/api/lookCollection/getLookCollection"
   );
@@ -18,7 +20,7 @@ const Looks = () => {
       <div className="py-5 lg:py-10 space-y-4">
         <div className="flex justify-between lg:justify-center">
           <h1 className="font-tenor font-normal text-2xl text-primary text-center">
-            Looklar
+            {t("looks.title")}
           </h1>
 
           <div className="flex lg:hidden items-center gap-5">
@@ -47,13 +49,12 @@ const Looks = () => {
 
         <div className="flex justify-between items-center px-28">
           <p className="font-tenor font-normal text-base text-primary  leading-[180%] hidden lg:block">
-            Galereyamizdan ilhom oling va ijtimoiy tarmoqlarda @feliza va
-            #felizastyle bilan o’z ko’rinishingizni ulashing.
+            {t("looks.desc")}
           </p>
 
           <div className="hidden lg:flex gap-2.5 items-center">
             <p className="font-tenor font-normal text-sm text-secondary">
-              Ko'rish:
+              {t("looks.see")}
             </p>
             <div className="flex items-center gap-5">
               <Button
@@ -94,7 +95,9 @@ const Looks = () => {
         </div>
       ) : (
         <div
-          className={`grid w-full gap-1 grid-cols-${gridMobile} lg:grid-cols-${grid}`}
+          className={`grid w-full gap-1 grid-cols-${gridMobile} ${
+            grid == 6 ? "lg:grid-cols-6" : "lg:grid-cols-4"
+          }`}
         >
           {data?.map((item) => (
             <div

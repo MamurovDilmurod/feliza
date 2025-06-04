@@ -1,10 +1,11 @@
 import { Select } from "antd";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IoIosArrowDown } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 const LanguageSelector = () => {
   const { i18n } = useTranslation();
-
+  const [open, setOpen] = useState(false);
   const handleChange = (e) => {
     const selectedLanguage = e;
     i18n.changeLanguage(selectedLanguage);
@@ -12,34 +13,58 @@ const LanguageSelector = () => {
 
   return (
     <div className="w-fit hidden md:block">
-      {/* <select
-        value={i18n.language}
-        onChange={handleChange}
-        className="rounded text-sm"
-      >
-        <option value="ru">Русский</option>
-        <option value="uz">O‘zbek</option>
-      </select> */}
-
       <Select
+        open={open}
+        onOpenChange={(visible) => setOpen(visible)}
         variant="borderless"
         value={i18n.language}
         onChange={handleChange}
-        className="w-fit rounded text-sm"
-        suffixIcon={<IoIosArrowDown width={6} />}
+        className="w-[110px] !text-sm !font-tenor !relative"
+        suffixIcon={
+          open ? (
+            <IoIosArrowUp
+              color="#0d0d0d"
+              width={2}
+              style={{
+                fontSize: "18px",
+              }}
+            />
+          ) : (
+            <IoIosArrowDown
+              color="#0d0d0d"
+              width={2}
+              style={{
+                fontSize: "18px",
+              }}
+            />
+          )
+        }
         options={[
-          { value: "ru", label: "Русский" },
-          { value: "uz", label: "O‘zbek" },
+          {
+            value: "ru",
+            label: "Русский",
+            className:
+              "!font-tenor !font-bold !bg-transparent !py-2 border-b border-[#bbb] !rounded-none",
+          },
+          {
+            value: "uz",
+            label: "O‘zbek",
+            className: "!font-tenor !font-bold !bg-transparent !py-2",
+          },
         ]}
-        // dropdownClassName="bg-white text-black"
-        // dropdownStyle={{
-        //   backgroundColor: "white",
-        //   color: "white",
-        //   border: "1px solid #d9d9d9",
-        //   width: 160,
-        // }}
         styles={{
-          root: { backgroundColor: "white", color: "red" },
+          popup: {
+            root: {
+              background: "white",
+              width: "160px",
+              padding: "5px 20px",
+              scrollbarWidth: "none",
+              position: "fixed",
+              top: "80px",
+              borderRadius: 0,
+              border: "2px solid #bbb",
+            },
+          },
         }}
       />
     </div>
