@@ -284,6 +284,10 @@ const UserAuth = () => {
                         expires: 1,
                         secure: true,
                       });
+                      Cookies.set("USER-ID", data.customerId, {
+                        expires: 1,
+                        secure: true,
+                      });
                     },
                     onError: (error) => {
                       console.error("Login failed", error);

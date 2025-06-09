@@ -38,6 +38,26 @@
       "btn": "Looklarni ko’ring"
     }
   },
+  "cart": {
+    "title": "Savatcha",
+    "select-all": "Barchasini tanlash",
+    "buy": "Sotib olish",
+    "sum": "so'm",
+    "buy-info": "Xarid qilish uchun savatchadagi mahsulotlarni tanlang!",
+    "color": "Rang",
+    "size": "O’lcham",
+    "save": "Saqlash",
+    "selected-product": "mahsulot tanlandi",
+    "all-sum": "Jami summa",
+    "pay-info": {
+      "title": "To’lov tartibi",
+      "desc": "To’lov online tarzda PayMe, Uzumbank yoki Click orqali amalga oshiriladi"
+    },
+    "empty-cart-info": {
+      "title": "Hozircha savatchada mahsulotlar yo’q.",
+      "desc": "Katalogdan kerakli mahsulotlarni tanlang va savatga qo’shing"
+    }
+  },
   "footer": {
     "title1": "Biz haqimizda",
     "title2": "Filiallarimiz",

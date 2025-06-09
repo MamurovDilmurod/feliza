@@ -9,25 +9,78 @@ import { HiOutlineShoppingBag } from "react-icons/hi";
 import { useState } from 'react';
 import ProductCard from './../../components/ProductCart/ProductCard';
 import { Carousel } from 'antd';
+import Cookies from 'js-cookie';
+import { useCreate } from './../../services/mutations/useCreate';
 
 function ProductDetail() {
     const { id } = useParams()
     const { i18n } = useTranslation()
     const { data, isLoading, isFetching } = useGetList(endpoints.products.getProductById + id, {})
-
-
+    const userID = Cookies.get("USER-ID");
+    console.log(userID);
     const { data: productVariants, isLoading: loadvar } = useGetList(endpoints.products.searchProduct + data?.referenceNumber)
     const { data: similarProducts, isLoading: loadingSimilar } = useGetList(endpoints.products.getProductByCategoryId + data?.category[0]?.id, {
         page: 0,
         size: 15,
     })
+    const { mutate, isPending } = useCreate(endpoints.cart.addCartItem, endpoints.cart.getCart)
     const [open, setOpen] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColorIndex, setSelectedColorIndex] = useState(0);
     const navigate = useNavigate()
 
-    console.log(" data", data);
+    console.log(" productVariants", data);
+
+    // savatga qoshish funktsiyasi 
+    const addToCart = () => {
+        mutate({
+            customerId: userID,
+            productSizeVariantId: productVariants[0]?.productSizeVariantList?.[0]?.id,
+            quantity: 1,
+        }, {
+            onSuccess: (data) => {
+                console.log(data);
+            },
+        })
+    }
+
+    // savatga qoshish funktsiyasi yaxshirogi uyda chunish kerak
+    // const addToCart = () => {
+    //     // 1. Tanlangan rang variantini olish
+    //     const selectedColorVariant = productVariants?.[selectedColorIndex];
+
+    //     if (!selectedColorVariant) {
+    //         toast.error(i18n.language === 'uz' ? "Iltimos, rang tanlang" : "Пожалуйста, выберите цвет");
+    //         return;
+    //     }
+
+    //     // 2. Tanlangan razmerga mos productSizeVariant ni topish
+    //     const selectedSizeVariant = selectedColorVariant.productSizeVariantList?.find(
+    //         (variant) => variant.size === selectedSize
+    //     );
+
+    //     if (!selectedSizeVariant) {
+    //         toast.error(i18n.language === 'uz' ? "Iltimos, razmer tanlang" : "Пожалуйста, выберите размер");
+    //         return;
+    //     }
+
+    //     // 3. Mutate funksiyasini chaqirish
+    //     mutate({
+    //         customerId: userID,
+    //         productSizeVariantId: selectedSizeVariant.id,
+    //         quantity: 1,
+    //     }, {
+    //         onSuccess: (data) => {
+    //             console.log("Savatga qo'shildi:", data);
+    //             toast.success(i18n.language === 'uz' ? "Mahsulot savatga qo‘shildi" : "Товар добавлен в корзину");
+    //         },
+    //         onError: (error) => {
+    //             console.error("Xatolik:", error);
+    //             toast.error(i18n.language === 'uz' ? "Xatolik yuz berdi" : "Произошла ошибка");
+    //         }
+    //     });
+    // };
 
     if (loadvar) {
         return (
@@ -221,7 +274,7 @@ function ProductDetail() {
                             )}
                         </div>
 
-                        {/* Tugmalar */}
+                        {/* savatcha Tugmalar */}
                         <div className="w-full space-y-4 md:mt-10 mt-5 hidden md:block">
                             <div className="flex gap-4">
                                 <button
@@ -232,6 +285,7 @@ function ProductDetail() {
                                 </button>
 
                                 <button
+                                    onClick={addToCart}
                                     className="cursor-pointer flex-1 h-12 flex items-center justify-center border border-black hover:bg-black hover:text-white transition duration-300"
                                 >
                                     <HiOutlineShoppingBag className="text-xl mr-2" />
@@ -239,12 +293,14 @@ function ProductDetail() {
                                         {i18n.language === 'uz' ? "Savatchaga qo’shish" : "В корзину"}
                                     </span>
                                 </button>
+
                             </div>
 
                             <button className="cursor-pointer w-full h-12 border border-black hover:bg-black hover:text-white transition duration-300">
                                 {i18n.language === 'uz' ? "Sotib olish" : "Купить"}
                             </button>
                         </div>
+
                     </div>
                 </div>
             </div>

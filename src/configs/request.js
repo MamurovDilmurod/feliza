@@ -15,7 +15,7 @@ request.interceptors.request.use((config) => {
   const token = Cookies.get("FELIZA-TOKEN");
 
   if (token) {
-    config.headers.Authorization = `${token}`;
+    config.headers.Authorization = `Bearer ${token}`;
   }
 
   console.log(config);

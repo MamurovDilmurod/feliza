@@ -25,5 +25,10 @@ export const routes = [
 
     path: "/searchResult",
     element: React.lazy(() => import("../pages/searchResult/serachResult")),
-  }
+
+  },
+  {
+    path: "/cart",
+    element: React.lazy(() => import("../pages/cart/cart")),
+  },
 ];
