@@ -35,6 +35,7 @@ const ProductCard = ({ item, onLike }) => {
             )}
 
             <img
+                onClick={() => navigate(`/productDetail/${item.id}`)}
                 src={item?.productImages?.[0]?.url}
                 alt={i18n.language === 'uz' ? item.nameUZB : item.nameRUS}
                 className="w-full md:h-[365px] h-auto object-cover cursor-pointer"
