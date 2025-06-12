@@ -1,16 +1,20 @@
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useGetList } from '../../services/query/useGetList'
 import { endpoints } from '../../configs/endpoints'
-import { FaArrowDown, FaStar } from "react-icons/fa";
+import { FaArrowDown, FaMinus, FaStar } from "react-icons/fa";
 import { FaArrowUp } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { useState } from 'react';
 import ProductCard from './../../components/ProductCart/ProductCard';
-import { Carousel } from 'antd';
+import { Carousel, message } from 'antd';
 import Cookies from 'js-cookie';
 import { useCreate } from './../../services/mutations/useCreate';
+import { toast } from 'react-toastify';
+import { FaPlus } from "react-icons/fa";
+
+
 
 function ProductDetail() {
     const { id } = useParams()
@@ -24,63 +28,99 @@ function ProductDetail() {
         size: 15,
     })
     const { mutate, isPending } = useCreate(endpoints.cart.addCartItem, endpoints.cart.getCart)
-    const [open, setOpen] = useState(false)
-    const [isOpen, setIsOpen] = useState(false)
+    const { mutate: addtofavorites } = useCreate(endpoints.favorites.addFavoriteItem)
+    const [open, setOpen] = useState(true)
+    const [isOpen, setIsOpen] = useState(true)
     const [selectedSize, setSelectedSize] = useState("");
     const [selectedColorIndex, setSelectedColorIndex] = useState(0);
-    const navigate = useNavigate()
+    const [count, setCount] = useState(1);
 
-    console.log(" productVariants", data);
+    console.log(" productVariants", productVariants);
 
-    // savatga qoshish funktsiyasi 
+    // savatga qoshish funktsiyasi
     const addToCart = () => {
+        // 1. Tanlangan rang variantini olish
+        const selectedColorVariant = productVariants?.[selectedColorIndex];
+
+        if (!selectedColorVariant) {
+            toast.error(i18n.language === 'uz' ? "Iltimos, rang tanlang" : "Пожалуйста, выберите цвет");
+            return;
+        }
+
+        // 2. Tanlangan razmerga mos productSizeVariant ni topish
+        const selectedSizeVariant = selectedColorVariant.productSizeVariantList?.find(
+            (variant) => variant.size === selectedSize
+        );
+
+        if (!selectedSizeVariant) {
+            toast.error(i18n.language === 'uz' ? "Iltimos, razmer tanlang" : "Пожалуйста, выберите размер");
+            return;
+        }
+
+        // 3. Mutate funksiyasini chaqirish
         mutate({
             customerId: userID,
-            productSizeVariantId: productVariants[0]?.productSizeVariantList?.[0]?.id,
-            quantity: 1,
+            productSizeVariantId: selectedSizeVariant.id,
+            quantity: count,
         }, {
             onSuccess: (data) => {
-                console.log(data);
+                console.log("Savatga qo'shildi:", data);
+                toast.success(i18n.language === 'uz' ? `Mahsulot savatga qo‘shildi` : "Товар добавлен в корзину");
+                setCount(1);
             },
-        })
-    }
+            onError: (error) => {
+                console.error("Xatolik:", error);
+                toast.error(i18n.language === 'uz' ? "Xatolik yuz berdi" : "Произошла ошибка");
+            }
+        });
+    };
 
-    // savatga qoshish funktsiyasi yaxshirogi uyda chunish kerak
-    // const addToCart = () => {
-    //     // 1. Tanlangan rang variantini olish
-    //     const selectedColorVariant = productVariants?.[selectedColorIndex];
+    //  sevimlilar qoshish funksiyasi
+    const addToFavorites = () => {
+        const selectedColorVariant = productVariants?.[selectedColorIndex];
 
-    //     if (!selectedColorVariant) {
-    //         toast.error(i18n.language === 'uz' ? "Iltimos, rang tanlang" : "Пожалуйста, выберите цвет");
-    //         return;
-    //     }
+        if (!selectedColorVariant) {
+            toast.error(i18n.language === 'uz' ? "Iltimos, rang tanlang" : "Пожалуйста, выберите цвет");
+            return;
+        }
 
-    //     // 2. Tanlangan razmerga mos productSizeVariant ni topish
-    //     const selectedSizeVariant = selectedColorVariant.productSizeVariantList?.find(
-    //         (variant) => variant.size === selectedSize
-    //     );
+        const selectedSizeVariant = selectedColorVariant.productSizeVariantList?.find(
+            (variant) => variant.size === selectedSize
+        );
 
-    //     if (!selectedSizeVariant) {
-    //         toast.error(i18n.language === 'uz' ? "Iltimos, razmer tanlang" : "Пожалуйста, выберите размер");
-    //         return;
-    //     }
+        if (!selectedSizeVariant) {
+            toast.error(i18n.language === 'uz' ? "Iltimos, razmer tanlang" : "Пожалуйста, выберите размер");
+            return;
+        }
 
-    //     // 3. Mutate funksiyasini chaqirish
-    //     mutate({
-    //         customerId: userID,
-    //         productSizeVariantId: selectedSizeVariant.id,
-    //         quantity: 1,
-    //     }, {
-    //         onSuccess: (data) => {
-    //             console.log("Savatga qo'shildi:", data);
-    //             toast.success(i18n.language === 'uz' ? "Mahsulot savatga qo‘shildi" : "Товар добавлен в корзину");
-    //         },
-    //         onError: (error) => {
-    //             console.error("Xatolik:", error);
-    //             toast.error(i18n.language === 'uz' ? "Xatolik yuz berdi" : "Произошла ошибка");
-    //         }
-    //     });
-    // };
+        // ✅ Har bir rang varianti - bu alohida product bo'lganligi uchun
+        const productId = selectedColorVariant?.id;
+
+        if (!productId) {
+            toast.error(i18n.language === 'uz' ? "Mahsulot topilmadi" : "Товар не найден");
+            return;
+        }
+
+        addtofavorites(
+            {
+                customerId: userID,
+                productId: productId,
+            },
+            {
+                onSuccess: (data) => {
+                    console.log("Sevimlilarga qo'shildi:", data);
+                    toast.success(i18n.language === 'uz' ? `Mahsulot sevimlilarga qo‘shildi` : "Товар добавлен в избранное");
+                },
+                onError: (error) => {
+                    console.error("Xatolik:", error);
+                    toast.error(i18n.language === 'uz' ? "Xatolik yuz berdi" : "Произошла ошибка");
+                }
+            }
+        );
+    };
+
+
+
 
     if (loadvar) {
         return (
@@ -90,7 +130,6 @@ function ProductDetail() {
             </div>
         );
     }
-
     return (
         <div className='font-tenor md:px-6 '>
             <div className='font-tenor'>
@@ -164,36 +203,48 @@ function ProductDetail() {
                         </div>
 
                         {/* Rang tanlash */}
-                        <div className='flex flex-col gap-3 md:pt-12 pt-5'>
+                        <div className="flex flex-col gap-3 md:pt-12 pt-5">
                             <h2 className="text-lg font-normal">
-                                {i18n.language === 'uz' ? 'Rang:' : 'Цвет:'} <span className='font-normal'>
+                                {i18n.language === 'uz' ? 'Rang:' : 'Цвет:'}{' '}
+                                <span className="font-normal">
                                     {i18n.language === 'uz'
                                         ? productVariants[selectedColorIndex]?.color?.nameUZB
                                         : productVariants[selectedColorIndex]?.color?.nameRUS}
                                 </span>
                             </h2>
+
                             <div className="flex flex-wrap gap-2">
                                 {productVariants?.map((item, index) => {
                                     const isSelected = selectedColorIndex === index;
+                                    const isActive = item?.active;
+
                                     return (
                                         <div
                                             key={index}
-                                            onClick={() => item.active && setSelectedColorIndex(index)}
-                                            className={`relative cursor-pointer w-[78px]
-              ${isSelected ? 'border-black' : 'border-gray-300'} 
-              ${!item?.active ? 'opacity-50 cursor-not-allowed' : 'hover:border-black'}
+                                            onClick={() => isActive && setSelectedColorIndex(index)}
+                                            className={`
+                relative w-[78px] overflow-hidden cursor-pointer border 
+                ${isSelected ? 'border-black' : 'border-gray-300'} 
+                ${!isActive ? 'opacity-50 cursor-not-allowed' : 'hover:border-black'}
             `}
                                         >
                                             <img
                                                 src={item?.productImages?.[0]?.url}
                                                 alt="Product"
-                                                className="w-[78px] md:h-[108px] object-cover h-auto"
+                                                className="w-[78px] md:h-[108px] h-auto object-cover"
                                             />
 
-                                            {!item?.active && (
-                                                <div className="absolute inset-0 pointer-events-none bg-white/60 rounded-md flex items-center justify-center">
+                                            {!isActive && (
+                                                <div className="absolute inset-0 pointer-events-none bg-white/60 flex items-center justify-center">
                                                     <svg viewBox="0 0 100 100" className="w-full h-full">
-                                                        <line x1="0" y1="100" x2="100" y2="0" stroke="gray" strokeWidth="5" />
+                                                        <line
+                                                            x1="0"
+                                                            y1="100"
+                                                            x2="100"
+                                                            y2="0"
+                                                            stroke="gray"
+                                                            strokeWidth="5"
+                                                        />
                                                     </svg>
                                                 </div>
                                             )}
@@ -202,6 +253,7 @@ function ProductDetail() {
                                 })}
                             </div>
                         </div>
+
 
                         {/* O‘lcham tanlash */}
                         <div className=" mt-7 md:mt-12">
@@ -214,10 +266,10 @@ function ProductDetail() {
                                     <button
                                         key={index}
                                         onClick={() => setSelectedSize(item.size)}
-                                        className={`border md:px-5 md:py-3 px-2 py-1 cursor-pointer rounded-md
-            hover:bg-black hover:text-white transition-colors duration-300
-            ${selectedSize === item.size ? 'bg-black text-white' : 'bg-white text-black'}
-          `}
+                                        className={`border md:px-5 md:py-3 px-2 py-1 cursor-pointer
+                hover:bg-black hover:text-white transition-colors duration-300
+                ${selectedSize === item.size ? 'bg-black text-white' : 'bg-white text-black'}
+            `}
                                     >
                                         {item.size}
                                     </button>
@@ -277,13 +329,37 @@ function ProductDetail() {
                         {/* savatcha Tugmalar */}
                         <div className="w-full space-y-4 md:mt-10 mt-5 hidden md:block">
                             <div className="flex gap-4">
+                                {/* sevimlilar qoshish */}
                                 <button
+                                    onClick={addToFavorites}
                                     className="cursor-pointer w-12 h-12 flex items-center justify-center border border-gray-300 hover:bg-red-500 hover:text-white transition duration-300"
                                     title="Sevimlilar"
                                 >
                                     <FaRegHeart className="text-2xl" />
                                 </button>
 
+
+                                {/* Count boshqaruvi bolim */}
+                                <div className="flex items-center gap-3 mt-2">
+                                    <FaMinus
+                                        onClick={() => count > 0 && setCount(count - 1)}
+                                        className={`cursor-pointer ${count === 0 ? 'opacity-30 pointer-events-none' : ''}`}
+                                    />
+                                    <p>{count}</p>
+
+                                    <FaPlus
+                                        onClick={() => {
+                                            const maxQty = data?.productSizeVariantList?.find(item => item.size === selectedSize)?.quantity ?? 0;
+                                            if (count < maxQty) setCount(count + 1);
+                                        }}
+                                        className={`cursor-pointer ${count >= (data?.productSizeVariantList?.find(item => item.size === selectedSize)?.quantity ?? 0)
+                                            ? 'opacity-30 pointer-events-none'
+                                            : ''
+                                            }`}
+                                    />
+                                </div>
+
+                                {/* savatga qoshish tugmasi */}
                                 <button
                                     onClick={addToCart}
                                     className="cursor-pointer flex-1 h-12 flex items-center justify-center border border-black hover:bg-black hover:text-white transition duration-300"
@@ -295,7 +371,6 @@ function ProductDetail() {
                                 </button>
 
                             </div>
-
                             <button className="cursor-pointer w-full h-12 border border-black hover:bg-black hover:text-white transition duration-300">
                                 {i18n.language === 'uz' ? "Sotib olish" : "Купить"}
                             </button>
@@ -312,18 +387,33 @@ function ProductDetail() {
                 <h2 className="text-lg font-semibold mb-2">
                     {i18n.language === 'uz' ? 'Foydalanuvchi izohlari' : 'Отзывы пользователей'}
                 </h2>
-
                 {
                     data?.reviewList?.length > 0 ? (
                         <div className="space-y-2">
-                            <button className="text-blue-500 underline mb-2">
+                            <button className="text-[#5B5B5B] cursor-pointer mb-2 font-bold hover:text-black">
                                 {i18n.language === 'uz' ? 'Barchasini ko‘rish' : 'Посмотреть все'} ({data?.reviewList?.length || 0})
                             </button>
                             {
                                 data?.reviewList?.map((review, index) => (
                                     <div key={index} className="border-b py-2">
-                                        <p className="font-medium">{review.userName}</p>
-                                        <p className="text-sm text-gray-600">{review.comment}</p>
+                                        <div className="flex gap-4">
+                                            <p className="font-medium">{review?.customerName}</p>
+                                            <div className="flex items-center gap-1 text-[#0D0D0D]">
+                                                {[...Array(review?.rating)].map((_, i) => (
+                                                    <FaStar key={i} />
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <p className="text-sm text-gray-600 mt-2.5">{review?.createdAt?.slice(0, 10)}</p>
+                                        {/* <img className='w-[60px] h-[80px] border object-cover mt-2.5' src={review?.images[0]?.url} alt=" " /> */}
+                                        <div className='flex gap-2'>
+                                            {
+                                                review?.images?.map((image, index) => (
+                                                    <img key={index} className='w-[60px] h-[80px] border object-cover mt-2.5' src={image?.url} alt=" " />
+                                                ))
+                                            }
+                                        </div>
+                                        <p className="text-sm text-gray-600 md:mt-4 mt-2.5 md:mb-12 mb-4">{review.content}</p>
                                     </div>
                                 ))
                             }
@@ -334,7 +424,6 @@ function ProductDetail() {
                     )
                 }
             </div>
-            <hr className='text-[#858585] w-full md:mt-10 mt-5' />
 
             {/* O’XSHASH MAHSULOTLAR */}
             <div className="md:mt-20 mt-7">
@@ -372,29 +461,59 @@ function ProductDetail() {
             </div>
 
             {/* buttolar mobile uchun tolov btn */}
-            <div className="w-full space-y-4 md:mt-10 mt-7 block md:hidden px-2">
-                <div className="flex gap-4">
+            <div className="w-full space-y-4 md:mt-10 mt-7 block md:hidden px-2 fixed bottom-20 left-0 bg-white ">
+                {/* Yuqori actionlar: Sevimli, Count, Savat */}
+                <div className="flex gap-3 items-center">
+                    {/* Sevimlilar tugmasi */}
                     <button
-                        className="cursor-pointer w-12 h-12 flex items-center justify-center border border-gray-300 hover:bg-red-500 hover:text-white transition duration-300"
+                        className="w-11 h-11 flex items-center justify-center rounded border border-gray-300 hover:bg-red-500 hover:text-white transition"
                         title="Sevimlilar"
                     >
-                        <FaRegHeart className="text-2xl" />
+                        <FaRegHeart className="text-xl" />
                     </button>
 
+                    {/* Count boshqaruvi */}
+                    {selectedSize && (
+                        <div className="flex items-center gap-2 border border-gray-300 rounded px-3 py-1">
+                            <button
+                                onClick={() => count > 0 && setCount(count - 1)}
+                                disabled={count === 0}
+                                className={`text-lg ${count === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:text-red-500'}`}
+                            >
+                                <FaMinus />
+                            </button>
+                            <span className="font-medium w-6 text-center">{count}</span>
+                            <button
+                                onClick={() => {
+                                    const maxQty = data?.productSizeVariantList?.find(item => item.size === selectedSize)?.quantity ?? 0;
+                                    if (count < maxQty) setCount(count + 1);
+                                }}
+                                disabled={count >= (data?.productSizeVariantList?.find(item => item.size === selectedSize)?.quantity ?? 0)}
+                                className={`text-lg ${count >= (data?.productSizeVariantList?.find(item => item.size === selectedSize)?.quantity ?? 0)
+                                    ? 'opacity-30 cursor-not-allowed'
+                                    : 'hover:text-black'}`}
+                            >
+                                <FaPlus />
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Savatcha tugmasi (icon only) */}
                     <button
-                        className="cursor-pointer flex-1 h-12 flex items-center justify-center border border-black hover:bg-black hover:text-white transition duration-300"
+                        onClick={addToCart}
+                        className="flex-1 h-11 flex items-center justify-center rounded border border-black bg-black text-white hover:bg-white hover:text-black transition"
+                        title={i18n.language === 'uz' ? "Savatchaga qo’shish" : "В корзину"}
                     >
-                        <HiOutlineShoppingBag className="text-xl mr-2" />
-                        <span>
-                            {i18n.language === 'uz' ? "Savatchaga qo’shish" : "В корзину"}
-                        </span>
+                        <HiOutlineShoppingBag className="text-xl" />
                     </button>
                 </div>
 
-                <button className="cursor-pointer w-full h-12 border border-black hover:bg-black hover:text-white transition duration-300">
+                {/* Sotib olish tugmasi */}
+                <button className="w-full h-12 rounded border border-black hover:bg-black hover:text-white transition">
                     {i18n.language === 'uz' ? "Sotib olish" : "Купить"}
                 </button>
             </div>
+
         </div>
     )
 }
