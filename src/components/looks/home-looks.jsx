@@ -28,7 +28,10 @@ const HomeLooks = () => {
             </p>
           </div>
           <Button
-            onClick={() => navigate("/looks")}
+            onClick={() => (
+              navigate("/looks"),
+              window.scrollTo({ top: 0, behavior: "smooth" })
+            )}
             iconPosition="end"
             icon={<FaArrowRightLong className="!mt-2" size={21} />}
             className="!font-tenor !text-lg !font-normal !px-7 !h-12 max-w-56"

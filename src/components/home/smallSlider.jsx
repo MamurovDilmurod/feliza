@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 export const SmallSlider = ({ palcement }) => {
   const { i18n, t } = useTranslation();
   const { data, isLoading } = useGetList("/api/homePage/getHomePage");
-  const FilteredSlider = data?.smallSliderResponseDtos.filter(
+  const FilteredSlider = data?.smallSliderResponseDtos?.filter(
     (item) => item.placeNumber === palcement
   );
 
@@ -17,8 +17,8 @@ export const SmallSlider = ({ palcement }) => {
       <div className="p-2 max-w-[1280px] mx-auto">
         {isLoading ? (
           <div className="flex justify-between gap-3 overflow-x-scroll overflow-hidden">
-            {Array.from({ length: 4 }).map((item) => (
-              <div className="space-y-2 w-fit">
+            {Array.from({ length: 4 }).map((item,index) => (
+              <div key={index} className="space-y-2 w-fit">
                 <Skeleton.Image active className="!w-[284px] !h-[350px]" />
                 <div className="">
                   <Skeleton

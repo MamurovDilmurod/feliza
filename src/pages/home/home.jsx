@@ -16,11 +16,11 @@ const Home = () => {
       <HomeLooks />
       <SmallSlider palcement={3} />
       <SmallSlider palcement={4} />
+      <NessaHome />
       <SmallSlider palcement={5} />
       <SmallSlider palcement={6} />
       <SmallSlider palcement={7} />
       <SmallSlider palcement={8} />
-      <NessaHome />
     </div>
   );
 };

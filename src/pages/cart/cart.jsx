@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetList } from "../../services/query/useGetList";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
-import { Button, Checkbox, message, Modal } from "antd";
+import { Button, Checkbox, Drawer, message, Modal } from "antd";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { MdOutlineEdit } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -10,8 +10,14 @@ import { useDeleteById } from "../../services/mutations/useDeleteById";
 import CartInfoIcon from "../../assets/icons/cart-info-icon";
 import { PiMinus, PiPlus } from "react-icons/pi";
 import { useGetById } from "../../services/query/useGetById";
+import { useUpdateById } from "../../services/mutations/useUpdateById";
+import { OrderCard } from "../../components/cart/order-card";
+import formatPrice from "../../utils/formatPrice";
 const Cart = () => {
+  const [deletingId, setdeletingId] = useState(null);
+  const [isBuying, setisBuying] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { i18n, t } = useTranslation();
   const userID = Cookies.get("USER-ID");
   const { data, isLoading } = useGetList(
@@ -19,15 +25,12 @@ const Cart = () => {
   );
   const [selectedEditCart, setselectedEditCart] = useState("");
   const [selectedEditProductId, setselectedEditProductId] = useState("");
+  const [selectedEditCartId, setselectedEditCartId] = useState("");
   const [selectedEditProductSize, setselectedEditProductSize] = useState("");
   const { data: cartItem } = useGetById(
     "/api/product/searchProduct/",
     selectedEditCart
   );
-  const { data: Coupon } = useGetList(
-    "/api/couponCustomer/getCouponsByCustomerId/" + userID
-  );
-  const formatPrice = (num) => num.toLocaleString("en-US").replace(/,/g, " ");
 
   const [cart, setCart] = useState([]);
   const [checkAll, setCheckAll] = useState(false);
@@ -61,11 +64,15 @@ const Cart = () => {
     cart?.includes(item?.cartItemId)
   );
 
-  let sum = 0;
+  const sum = selectedItems?.reduce((acc, item) => {
+    const price = item.salePrice || item.sellPrice || 0;
+    return acc + price * (item.quantity || 1);
+  }, 0);
 
-  const { mutate } = useDeleteById("/api/cartItem/");
+  const { mutate, isPending } = useDeleteById("/api/cartItem/");
 
   const handleDelete = (id) => {
+    setdeletingId(id);
     mutate(id, {
       onSuccess: () => {
         message.success("Mahsulot SAvatchadan olib tashlandi!");
@@ -73,17 +80,37 @@ const Cart = () => {
     });
   };
 
-  console.log(data);
-  console.log("CartITEM", cartItem);
   const filteredProduct =
     cartItem?.filter((product) => product.id === selectedEditProductId) || [];
-  console.log("FILTERRR", filteredProduct);
-  const filteredProductCart =
-    data?.filter((product) => product.productId === selectedEditProductId) ||
-    [];
-  console.log("FILTERRR 83", filteredProductCart[0]?.quantity);
-  const qu = filteredProductCart[0]?.quantity;
-  const [quantityEdit, setquantityEdit] = useState(qu || 1);
+
+  const [quantityEdit, setquantityEdit] = useState(1);
+
+  const { mutate: updateCart, isPending: updateCartLoading } = useUpdateById(
+    "/api/cartItem/",
+    "/api/cartItem/byCustomerId/"
+  );
+
+  const handleEdit = () => {
+    updateCart(
+      {
+        id: selectedEditCartId,
+        data: {
+          customerId: userID,
+          productSizeVariantId: selectedEditProductSize,
+          quantity: quantityEdit,
+        },
+      },
+      {
+        onSuccess: () => {
+          setIsModalOpen(false);
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      }
+    );
+  };
+
   return (
     <>
       {data?.length == 0 || isLoading ? (
@@ -106,7 +133,7 @@ const Cart = () => {
           </div>
         </div>
       ) : (
-        <div className="flex">
+        <div className="flex relative">
           <div className="bg-background w-full p-3 lg:p-10 lg:pl-28">
             <div className="flex flex-col lg:flex-row items-center gap-3 justify-between pb-8 ">
               <div className=""></div>
@@ -138,7 +165,10 @@ const Cart = () => {
               </div>
             </div>
             {data?.map((item) => (
-              <div className="flex gap-3 lg:gap-10 border-b border-accent py-5">
+              <div
+                key={item?.cartItemId}
+                className="flex gap-3 lg:gap-10 border-b border-accent py-5"
+              >
                 <div className="relative">
                   {item.sale > 0 && (
                     <p className="absolute top-3.5 font-tenor font-normal text-xs text-white bg-gold w-fit px-2 py-1">
@@ -176,7 +206,7 @@ const Cart = () => {
                     </div>
                     <p className="font-tenor font-normal text-base text-primary">
                       {item.salePrice
-                        ? item.salePrice
+                        ? formatPrice(item.salePrice)
                         : formatPrice(item.sellPrice)}{" "}
                       {t("cart.sum")}
                     </p>
@@ -200,6 +230,9 @@ const Cart = () => {
                       <h1 className="font-tenor font-normal text-sm text-accent leading-[150%]">
                         {t("cart.size")}: {item.productSizeVariant.size}
                       </h1>
+                      <h1 className="font-tenor font-normal text-sm text-accent leading-[150%]">
+                        {t("cart.quantity")}: {item?.quantity}
+                      </h1>
                     </div>
 
                     <div className="flex gap-10">
@@ -207,16 +240,21 @@ const Cart = () => {
                         className="cursor-pointer"
                         onClick={() => (
                           setIsModalOpen(true),
-                          setselectedEditCart(item?.nameUZB),
+                          setselectedEditCart(item?.productRefNumber),
                           setselectedEditProductId(item?.productId),
-                          setselectedEditProductSize(item.productSizeVariant.id)
+                          setquantityEdit(item.quantity),
+                          setselectedEditProductSize(
+                            item.productSizeVariant.id
+                          ),
+                          setselectedEditCartId(item.cartItemId)
                         )}
                         size={24}
                       />
-                      <RiDeleteBin6Line
-                        className="cursor-pointer hover:text-red-500 duration-300"
+                      <Button
+                        className="!border-none !bg-transparent hover:!text-red-500 !duration-300"
+                        loading={deletingId == item.cartItemId && isPending}
                         onClick={() => handleDelete(item.cartItemId)}
-                        size={24}
+                        icon={<RiDeleteBin6Line size={24} />}
                       />
                     </div>
                   </div>
@@ -224,94 +262,124 @@ const Cart = () => {
               </div>
             ))}
           </div>
-          <div className="bg-white max-w-[464px] w-full h-full p-10 min-h-[738px] hidden lg:flex flex-col justify-between">
-            <div className="">
-              <div className="flex justify-between items-center font-tenor font-normal">
-                <h1 className="text-xl text-primary">{t("cart.buy")}</h1>
-                <p className="text-sm text-secondary">
-                  {cart.length > 0 &&
-                    cart?.length + " " + t("cart.selected-product")}
-                </p>
+          <div className="bg-white max-w-[464px] w-full h-full min-h-[738px] hidden lg:flex">
+            {isBuying ? (
+              <div className="w-full">
+                <OrderCard sum={sum} cart={cart} />
               </div>
-              <div className="">
-                {selectedItems?.map((item) => (
-                  <div className="flex justify-between items-center border-b border-dashed py-5">
-                    <h1 className="font-tenor font-normal text-sm text-primary">
-                      {i18n.language === "uz" ? item.nameUZB : item.nameRUS}
-                    </h1>
-                    <p className="font-tenor font-normal text-sm text-primary">
-                      {item.salePrice
-                        ? formatPrice(item.salePrice)
-                        : formatPrice(item.sellPrice)}
-
-                      {" " + t("cart.sum")}
+            ) : (
+              <div className="max-w-[464px] w-full h-full p-10 min-h-[738px] hidden lg:flex flex-col justify-between">
+                <div className="">
+                  <div className="flex justify-between items-center font-tenor font-normal">
+                    <h1 className="text-xl text-primary">{t("cart.buy")}</h1>
+                    <p className="text-sm text-secondary">
+                      {cart.length > 0 &&
+                        cart?.length + " " + t("cart.selected-product")}
                     </p>
                   </div>
-                ))}
-              </div>
-            </div>
+                  <div className="">
+                    {selectedItems?.map((item) => (
+                      <div className="flex justify-between items-center border-b border-dashed py-5">
+                        <h1 className="font-tenor font-normal text-sm text-primary">
+                          {i18n.language === "uz" ? item.nameUZB : item.nameRUS}
+                        </h1>
+                        <p className="font-tenor font-normal text-sm text-primary">
+                          {item.salePrice
+                            ? formatPrice(item.salePrice)
+                            : formatPrice(item.sellPrice)}
 
-            {cart?.length == 0 && (
-              <div className="">
-                <h1 className="text-center font-tenor font-normal text-base text-accent">
-                  {t("cart.buy-info")}
-                </h1>
+                          {" " + t("cart.sum")}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {cart?.length == 0 && (
+                  <div className="">
+                    <h1 className="text-center font-tenor font-normal text-base text-accent">
+                      {t("cart.buy-info")}
+                    </h1>
+                  </div>
+                )}
+                <div className="space-y-5">
+                  <div className="">
+                    <div className="flex justify-between items-center font-tenor font-normal text-base text-primary border-b pb-5">
+                      {cart?.length > 0 && (
+                        <>
+                          <h1>{t("cart.all-sum")}:</h1>
+                          <h1 className="">
+                            {formatPrice(sum)} {t("cart.sum")}
+                          </h1>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="">
+                    <div className="flex gap-2 items-center font-tenor font-normal text-base text-primary pb-3">
+                      <IoIosInformationCircleOutline size={18} />
+                      <h1>{t("cart.pay-info.title")}</h1>
+                    </div>
+
+                    <p className="font-tenor font-normal text-sm text-secondary lg:pb-10">
+                      {t("cart.pay-info.desc")}
+                    </p>
+
+                    <Button
+                      className="!rounded-none !h-12"
+                      type="primary"
+                      block
+                      children={t("cart.buy")}
+                      onClick={() => setisBuying(true)}
+                      disabled={cart.length == 0 ? true : false}
+                    />
+                  </div>
+                </div>
               </div>
             )}
-            <div className="space-y-5">
-              <div className="">
-                {selectedItems?.map((item) => {
-                  const isSale = item.sale > 0;
-                  sum =
-                    sum +
-                    (isSale
-                      ? item.salePrice * item.quantity
-                      : item.sellPrice * item.quantity);
-                })}
+          </div>
 
+          <div className="fixed lg:hidden bottom-20 p-2  w-full bg-white border-y">
+            <div className="space-y-2">
+              <div className="">
                 <div className="flex justify-between items-center font-tenor font-normal text-base text-primary border-b pb-5">
-                  {cart?.length > 0 && (
+                  {cart?.length > 0 ? (
                     <>
                       <h1>{t("cart.all-sum")}:</h1>
                       <h1 className="">
                         {formatPrice(sum)} {t("cart.sum")}
                       </h1>
                     </>
+                  ) : (
+                    <>
+                      <h1>{t("cart.all-sum")}:</h1>
+                      <h1 className="">0 {t("cart.sum")}</h1>
+                    </>
                   )}
                 </div>
               </div>
 
-              <div className="">
-                <div className="flex gap-2 items-center font-tenor font-normal text-base text-primary pb-3">
-                  <IoIosInformationCircleOutline size={18} />
-                  <h1>{t("cart.pay-info.title")}</h1>
-                </div>
-
-                <p className="font-tenor font-normal text-sm text-secondary lg:pb-10">
-                  {t("cart.pay-info.desc")}
-                </p>
-
-                <Button
-                  className="!rounded-none"
-                  type="primary"
-                  block
-                  children={t("cart.buy")}
-                />
-              </div>
+              <Button
+                className="!rounded-none"
+                type="primary"
+                block
+                children={t("cart.buy")}
+                onClick={() => setIsDrawerOpen(true)}
+                disabled={cart.length == 0 ? true : false}
+              />
             </div>
           </div>
         </div>
       )}
 
       <Modal
-        title="Basic Modal"
         closable={{ "aria-label": "Custom Close Button" }}
         open={isModalOpen}
-        // onOk={}
         onCancel={() => setIsModalOpen(false)}
-        // centered
         footer={false}
         maskClosable={false}
+        loading={updateCartLoading}
       >
         <div className="">
           {filteredProduct?.map((item) => (
@@ -384,8 +452,8 @@ const Cart = () => {
           ))}
 
           <div className="my-7 space-y-4">
-            <h1>
-              {t("cart.color")}:
+            <h1 className="font-tenor font-normal text-sm text-secondary">
+              {t("cart.color")}:{" "}
               {i18n.language == "uz"
                 ? filteredProduct[0]?.color?.nameUZB
                 : filteredProduct[0]?.color?.nameRUS}
@@ -407,18 +475,18 @@ const Cart = () => {
           </div>
 
           <div className="space-y-4">
-            <h1>{t("cart.size")}:</h1>
+            <h1 className="font-tenor font-normal text-sm text-secondary">
+              {t("cart.size")}:{" "}
+              {filteredProduct[0]?.productSizeVariantList?.map(
+                (item) =>
+                  item?.id === selectedEditProductSize && <>{item.size}</>
+              )}
+            </h1>
             <div className="flex gap-4">
               {filteredProduct[0]?.productSizeVariantList?.map((item) => (
-                <div
-                // className={`w-fit border border-primary font-tenor font-normal text-sm ${
-                //   item.id == selectedEditProductSize
-                //     ? "bg-primary text-white"
-                //     : "bg-white text-primary"
-                // }`}
-                >
+                <div>
                   <Button
-                    className={`w-fit !border !border-primary font-tenor font-normal text-sm ${
+                    className={`w-fit !rounded-none !border !border-primary !font-tenor !font-normal !text-sm ${
                       item.id == selectedEditProductSize
                         ? "!bg-primary !text-white"
                         : "!bg-white !text-primary"
@@ -427,43 +495,58 @@ const Cart = () => {
                     onClick={() => setselectedEditProductSize(item.id)}
                   >
                     {item?.size}
-                    {item?.quantity}
                   </Button>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="flex gap-7 items-center pb-16 pt-7">
-            <Button
-              icon={
-                <PiMinus color={quantityEdit == 1 ? "#5b5b5b" : "0d0d0d"} />
-              }
-              onClick={() =>
-                setquantityEdit(
-                  quantityEdit != 1 ? quantityEdit - 1 : quantityEdit
-                )
-              }
-            />
-            <p className="font-tenor font-normal text-xl text-primary">
-              {quantityEdit}
-            </p>
-            <Button
-              icon={<PiPlus color="#0d0d0d" />}
-              onClick={() => setquantityEdit(quantityEdit + 1)}
-            />
+          <div className="flex flex-col gap-7 pb-16 pt-7">
+            <h1 className="font-tenor font-normal text-sm text-secondary">
+              {t("cart.quantity")}:
+            </h1>
+
+            <div className="flex gap-7 items-center">
+              <Button
+                icon={
+                  <PiMinus color={quantityEdit == 1 ? "#5b5b5b" : "0d0d0d"} />
+                }
+                onClick={() =>
+                  setquantityEdit(
+                    quantityEdit != 1 ? quantityEdit - 1 : quantityEdit
+                  )
+                }
+              />
+              <p className="font-tenor font-normal text-xl text-primary">
+                {quantityEdit}
+              </p>
+              <Button
+                icon={<PiPlus color="#0d0d0d" />}
+                onClick={() => setquantityEdit(quantityEdit + 1)}
+              />
+            </div>
           </div>
 
           <div className="">
             <Button
+              onClick={() => handleEdit()}
               block
-              className="!rounded-none"
+              className="!rounded-none !h-12"
               type="primary"
               children={t("cart.save")}
             />
           </div>
         </div>
       </Modal>
+
+      <Drawer
+        closable={{ "aria-label": "Close Button" }}
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+        maskClosable={false}
+      >
+        <OrderCard />
+      </Drawer>
     </>
   );
 };

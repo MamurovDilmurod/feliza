@@ -53,7 +53,9 @@ export const HeaderSearch = ({ setShowSearch }) => {
         ) : (
           data?.map((item) => (
             <div
-              onClick={() => navigate("/productDetail/" + item.id)}
+              onClick={() => (
+                navigate("/productDetail/" + item.id), setShowSearch(false)
+              )}
               className="p-1 duration-300 cursor-pointer flex items-center gap-3 border-b"
             >
               <img
