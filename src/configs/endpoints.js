@@ -33,5 +33,8 @@ export const endpoints = {
   cart: {
     addCartItem: "/api/cartItem/addCartItem",
     getCart: "/api/cartItem/byCustomerId/"
+  },
+  favorites: {
+    addFavoriteItem: "/api/likedItem/addLikedItem",
   }
 };
