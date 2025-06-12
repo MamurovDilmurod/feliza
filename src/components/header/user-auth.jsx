@@ -5,17 +5,23 @@ import { FaRegUser, FaUser } from "react-icons/fa6";
 import { useCreate } from "../../services/mutations/useCreate";
 import { endpoints } from "../../configs/endpoints";
 import Cookies from "js-cookie";
+import { IoIosArrowBack } from "react-icons/io";
 
 const UserAuth = () => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [isregister, setIsregister] = useState(0);
+  const [isForgetPassword, setisForgetPassword] = useState(0);
   const [isLogin, setIsLogin] = useState(false);
   const [confirmCode, setConfirmCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const { mutate } = useCreate(endpoints.auth.isRegistered);
   const { mutate: RegisterPost } = useCreate(endpoints.auth.register);
   const { mutate: LoginPost } = useCreate(endpoints.auth.login);
+  const { mutate: sendForgetPassword } = useCreate(
+    endpoints.auth.sendVerifyCodeForgetPassword
+  );
+  const { mutate: forgetPassword } = useCreate(endpoints.auth.forgetPassword);
 
   const showDrawer = () => {
     setOpen(true);
@@ -53,39 +59,41 @@ const UserAuth = () => {
         }}
         placement="right"
       >
-        <Flex
-          vertical
-          gap={24}
-          style={{ display: isregister || isLogin ? "none" : "flex" }}
-        >
-          <h1 className="text-2xl font-normal text-center text-primary font-tenor">
-            {t("header.profile")}
-          </h1>
-          <p className="font-tenor text-center text-sm text-[#444] max-w-[300px] mx-auto text-wrap leading-[150%] mb-5">
-            {t("header.desc")}
-          </p>
-          <Flex vertical gap={20} className="">
-            <Button
-              className="!font-tenor"
-              type="primary"
-              style={{ height: 48 }}
-              block
-              children={t("header.login")}
-              onClick={() => {
-                setIsLogin(true);
-                setIsregister(false);
-              }}
-            />
-            <Button
-              className="!font-tenor"
-              type="default"
-              style={{ height: 48 }}
-              block
-              children={t("header.register.title")}
-              onClick={() => setIsregister(1)}
-            />
+        {isForgetPassword == 0 && (
+          <Flex
+            vertical
+            gap={24}
+            style={{ display: isregister || isLogin ? "none" : "flex" }}
+          >
+            <h1 className="text-2xl font-normal text-center text-primary font-tenor">
+              {t("header.profile")}
+            </h1>
+            <p className="font-tenor text-center text-sm text-[#444] max-w-[300px] mx-auto text-wrap leading-[150%] mb-5">
+              {t("header.desc")}
+            </p>
+            <Flex vertical gap={20} className="">
+              <Button
+                className="!font-tenor"
+                type="primary"
+                style={{ height: 48 }}
+                block
+                children={t("header.login")}
+                onClick={() => {
+                  setIsLogin(true);
+                  setIsregister(false);
+                }}
+              />
+              <Button
+                className="!font-tenor"
+                type="default"
+                style={{ height: 48 }}
+                block
+                children={t("header.register.title")}
+                onClick={() => setIsregister(1)}
+              />
+            </Flex>
           </Flex>
-        </Flex>
+        )}
 
         {isregister == 1 && (
           <Flex vertical gap={24} className="mt-5">
@@ -307,13 +315,18 @@ const UserAuth = () => {
                 />
               </Form.Item>
               <Form.Item name="password">
-                <Input
+                <Input.Password
                   placeholder={t("header.register.password")}
                   className="h-12"
                   style={{ borderRadius: 0 }}
                 />
               </Form.Item>
-              <p className="text-xs font-tenor font-normal text-primary mb-10 underline cursor-pointer">
+              <p
+                onClick={() => (
+                  setIsLogin(false), setIsregister(0), setisForgetPassword(1)
+                )}
+                className="text-xs font-tenor font-normal text-primary mb-10 underline cursor-pointer"
+              >
                 {t("header.register.forgotPassword")}
               </p>
               <Form.Item>
@@ -328,6 +341,115 @@ const UserAuth = () => {
               </Form.Item>
             </Form>
           </Flex>
+        )}
+
+        {isForgetPassword == 1 && (
+          <div className="">
+            <div className="flex justify-between pb-14 items-center">
+              <IoIosArrowBack
+                size={30}
+                className="cursor-pointer"
+                onClick={() => {
+                  setisForgetPassword(0);
+                  setIsLogin(true);
+                }}
+              />
+              <h1 className="font-tenor font-normal text-xl text-primary text-center">
+                {t("header.forget.password-recovery")}
+              </h1>
+              <div className=""></div>
+            </div>
+
+            <Form
+              onFinish={(values) => {
+                sendForgetPassword(values, {
+                  onSuccess: () => {
+                    setPhoneNumber(values.phoneNumber);
+                    setisForgetPassword(2);
+                  },
+                });
+                console.log(values);
+              }}
+            >
+              <Form.Item name={"phoneNumber"} className="!pb-10">
+                <Input
+                  defaultValue={"+998"}
+                  className="h-12 !rounded-none"
+                  placeholder={t("header.register.phone")}
+                  required
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  block
+                  type="primary"
+                  className="!h-12 !rounded-none"
+                  htmlType="submit"
+                  children={t("header.register.confirm")}
+                />
+              </Form.Item>
+            </Form>
+          </div>
+        )}
+        {isForgetPassword == 2 && (
+          <div className="">
+            <div className="flex justify-between items-center pb-14">
+              <IoIosArrowBack
+                size={30}
+                onClick={() => {
+                  setisForgetPassword(1);
+                }}
+              />
+              <h1 className="font-tenor font-normal text-xl text-primary text-center">
+                {t("header.forget.password-recovery")}
+              </h1>
+              <div className=""></div>
+            </div>
+
+            <Form
+              className="!space-y-8"
+              initialValues={{
+                phoneNumber: phoneNumber,
+              }}
+              onFinish={(values) => {
+                forgetPassword(values, {
+                  onSuccess: () => {
+                    setisForgetPassword(0);
+                    setIsLogin(true);
+                  },
+                });
+                console.log(values);
+              }}
+            >
+              <Form.Item name={"phoneNumber"}>
+                <Input
+                  disabled
+                  value={phoneNumber}
+                  defaultValue={phoneNumber}
+                  className="h-12 !rounded-none"
+                />
+              </Form.Item>
+              <Form.Item name={"newPassword"}>
+                <Input.Password
+                  className="h-12 !rounded-none"
+                  placeholder={t("header.forget.new-password")}
+                  required
+                />
+              </Form.Item>
+              <Form.Item className="text-center !pb-7" name={"verifyCode"}>
+                <Input.OTP length={4} />
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  block
+                  className="!rounded-none !h-12"
+                  type="primary"
+                  htmlType="submit"
+                  children={t("header.forget.password-recovery")}
+                />
+              </Form.Item>
+            </Form>
+          </div>
         )}
       </Drawer>
     </div>

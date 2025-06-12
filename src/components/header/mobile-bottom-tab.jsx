@@ -14,11 +14,11 @@ export const MobileBottomTab = () => {
       icon: <FeIcon color={location.pathname == "/" ? "#0d0d0d" : "#5b5b5b"} />,
     },
     {
-      path: "/categoty",
+      path: "/",
       icon: <BiCategory size={24} />,
     },
     {
-      path: "/liked",
+      path: "/favorites",
       icon: <FaRegHeart size={24} />,
     },
     {
