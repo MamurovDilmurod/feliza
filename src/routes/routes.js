@@ -22,13 +22,19 @@ export const routes = [
     element: React.lazy(() => import("../pages/ProductDetail/ProductDetail")),
   },
   {
-
     path: "/searchResult",
     element: React.lazy(() => import("../pages/searchResult/serachResult")),
-
   },
   {
     path: "/cart",
     element: React.lazy(() => import("../pages/cart/cart")),
+  },
+  {
+    path: "/favorites",
+    element: React.lazy(() => import("../pages/favorites/favorites")),
+  },
+  {
+    path: "/profile",
+    element: React.lazy(() => import("../pages/profile/profile")),
   },
 ];

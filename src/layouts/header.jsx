@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import Logo from "../assets/images/feliza-logo.png";
 import LanguageSelector from "../components/header/language-selector";
-import { FaRegHeart } from "react-icons/fa6";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 import { LuShoppingBag } from "react-icons/lu";
 import { CiSearch } from "react-icons/ci";
 import { Badge, Button, Input } from "antd";
@@ -12,6 +12,7 @@ import { HeaderSearch } from "../components/header/header-search";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGetList } from "../services/query/useGetList";
 import Cookies from "js-cookie";
+import { RiShoppingBag3Fill } from "react-icons/ri";
 
 const Header = () => {
   const location = useLocation();
@@ -23,6 +24,9 @@ const Header = () => {
 
   const userID = Cookies.get("USER-ID");
   const { data } = useGetList("/api/cartItem/byCustomerId/" + userID);
+  const { data: favorites } = useGetList(
+    "/api/likedItem/getByCustomerId/" + userID
+  );
 
   const handleBoard = (name) => {
     setShowSearch(false);
@@ -74,26 +78,52 @@ const Header = () => {
             <CiSearch size={18} /> {t("search")}
           </p>
         </div>
-        <div className="cursor-pointer" onClick={() => navigate("/")}>
+        <div
+          className="cursor-pointer"
+          onClick={() => (
+            navigate("/"),
+            setShowBoard(false),
+            setBrandName(""),
+            window.scrollTo({ top: 0, behavior: "smooth" })
+          )}
+        >
           <img src={Logo} />
         </div>
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center justify-between gap-[53px]">
-            <FaRegHeart size={21} />
             <Badge
+              size="default"
               styles={{
                 indicator: { color: "black" },
               }}
               style={{ border: "1px solid black" }}
               color="white"
-              className="!font-tenor !text-xs"
-              count={data?.length}
+              className="!font-tenor !text-xs cursor-pointer"
+              count={favorites?.length}
+              onClick={() => navigate("/favorites")}
             >
-              <LuShoppingBag
-                onClick={() => navigate("/cart")}
-                className="cursor-pointer"
-                size={21}
-              />
+              {location.pathname == "/favorites" ? (
+                <FaHeart size={21} />
+              ) : (
+                <FaRegHeart size={21} />
+              )}
+            </Badge>
+            <Badge
+              size="default"
+              styles={{
+                indicator: { color: "black" },
+              }}
+              style={{ border: "1px solid black" }}
+              color="white"
+              className="!font-tenor !text-xs cursor-pointer"
+              count={data?.length}
+              onClick={() => navigate("/cart")}
+            >
+              {location.pathname == "/cart" ? (
+                <RiShoppingBag3Fill size={21} />
+              ) : (
+                <LuShoppingBag size={21} />
+              )}
             </Badge>
             <UserAuth />
             <LanguageSelector />

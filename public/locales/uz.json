@@ -8,6 +8,12 @@
     "catalog": "Katalog",
     "nessa": "Nessa",
     "close": "Yopish",
+    "forget": {
+      "password-recovery":"Parolni Tiklash",
+      "change-password": "Parolni o’zgartirish",
+      "new-password": "Yangi parol",
+      "edit-password": "Parolni yangilash"
+    },
     "register": {
       "title": "Ro'yxatdan o'tish",
       "name": "Ismingiz",
@@ -46,6 +52,7 @@
     "buy-info": "Xarid qilish uchun savatchadagi mahsulotlarni tanlang!",
     "color": "Rang",
     "size": "O’lcham",
+    "quantity": "Soni",
     "save": "Saqlash",
     "selected-product": "mahsulot tanlandi",
     "all-sum": "Jami summa",
@@ -57,6 +64,24 @@
       "title": "Hozircha savatchada mahsulotlar yo’q.",
       "desc": "Katalogdan kerakli mahsulotlarni tanlang va savatga qo’shing"
     }
+  },
+  "order": {
+    "customer-info": "Xaridor ma’lumotlari:",
+    "shipp-addr": "Yetkazib berish manzili:",
+    "add-addr": "Boshqa manzil qo’shish",
+    "shipp-info": {
+      "1": "Yetkazib berish xizmati 400 000 so’mdan yuqori bo’lgan buyurtmalar uchun bepul.",
+      "2": "400 000 so’mgacha bo’lgan buyurtmalar uchun 28 000 so’m.",
+      "3": "Toshkent shahri bo’ylab 24 soat ichida yetkazib beriladi.",
+      "4": "O’zbekiston bo’ylab 1-3 kun ichida yetkazib beriladi."
+    },
+    "coupons": "Kuponlar:",
+    "pay-type": "To’lov turi:",
+    "pay-info": "To’lov online tarzda PayMe, Uzumbank yoki Click orqali amalga oshiriladi",
+    "products": "Mahsulotlar:",
+    "delivery": "Yetkazib berish:",
+    "coupons-used": "Foydalanilgan kuponlar:",
+    "total-price": "Umumiy narx:"
   },
   "footer": {
     "title1": "Biz haqimizda",
