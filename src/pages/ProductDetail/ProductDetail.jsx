@@ -19,9 +19,8 @@ import { FaPlus } from "react-icons/fa";
 function ProductDetail() {
     const { id } = useParams()
     const { i18n } = useTranslation()
-    const { data, isLoading, isFetching } = useGetList(endpoints.products.getProductById + id, {})
     const userID = Cookies.get("USER-ID");
-    console.log(userID);
+    const { data, isLoading, isFetching } = useGetList(endpoints.products.getProductById + id, {})
     const { data: productVariants, isLoading: loadvar } = useGetList(endpoints.products.searchProduct + data?.referenceNumber)
     const { data: similarProducts, isLoading: loadingSimilar } = useGetList(endpoints.products.getProductByCategoryId + data?.category[0]?.id, {
         page: 0,
@@ -39,7 +38,7 @@ function ProductDetail() {
 
     // savatga qoshish funktsiyasi
     const addToCart = () => {
-        // 1. Tanlangan rang variantini olish
+        //  Tanlangan rang variantini olish
         const selectedColorVariant = productVariants?.[selectedColorIndex];
 
         if (!selectedColorVariant) {
@@ -47,7 +46,7 @@ function ProductDetail() {
             return;
         }
 
-        // 2. Tanlangan razmerga mos productSizeVariant ni topish
+        //  Tanlangan razmerga mos productSizeVariant ni topish
         const selectedSizeVariant = selectedColorVariant.productSizeVariantList?.find(
             (variant) => variant.size === selectedSize
         );
@@ -57,7 +56,7 @@ function ProductDetail() {
             return;
         }
 
-        // 3. Mutate funksiyasini chaqirish
+        //  Mutate funksiyasini chaqirish
         mutate({
             customerId: userID,
             productSizeVariantId: selectedSizeVariant.id,
@@ -69,8 +68,8 @@ function ProductDetail() {
                 setCount(1);
             },
             onError: (error) => {
-                console.error("Xatolik:", error);
-                toast.error(i18n.language === 'uz' ? "Xatolik yuz berdi" : "Произошла ошибка");
+                console.error("Xatolik korish :", error);
+                toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему");
             }
         });
     };
@@ -113,7 +112,7 @@ function ProductDetail() {
                 },
                 onError: (error) => {
                     console.error("Xatolik:", error);
-                    toast.error(i18n.language === 'uz' ? "Xatolik yuz berdi" : "Произошла ошибка");
+                    toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему");
                 }
             }
         );
@@ -235,7 +234,7 @@ function ProductDetail() {
                                             />
 
                                             {!isActive && (
-                                                <div className="absolute inset-0 pointer-events-none bg-white/60 flex items-center justify-center">
+                                                <div className="absolute inset-0 pointer-events-none bg-white/20 flex items-center justify-center">
                                                     <svg viewBox="0 0 100 100" className="w-full h-full">
                                                         <line
                                                             x1="0"
@@ -379,8 +378,6 @@ function ProductDetail() {
                     </div>
                 </div>
             </div>
-
-
 
             {/* Comnetariya bolimi uchun  */}
             <div className="md:mt-12 mt-5 px-4">
