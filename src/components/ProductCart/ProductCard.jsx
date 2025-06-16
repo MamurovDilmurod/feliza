@@ -1,9 +1,16 @@
-import React from 'react';
-import { IoIosHeartEmpty } from "react-icons/io";
+import React, { useEffect, useState } from 'react';
+import { IoIosHeart, IoIosHeartEmpty } from "react-icons/io";
 import { useTranslation } from 'react-i18next';
 import { RiShoppingBag4Line } from "react-icons/ri";
-import { message } from 'antd';
+import { Button, Modal, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useCreate } from '../../services/mutations/useCreate';
+import { endpoints } from '../../configs/endpoints';
+import { toast } from 'react-toastify';
+import { useDeleteById } from '../../services/mutations/useDeleteById';
+import { useGetById } from './../../services/query/useGetById';
+import { useGetList } from '../../services/query/useGetList';
 
 
 
@@ -11,23 +18,159 @@ const ProductCard = ({ item, onLike }) => {
     const { i18n } = useTranslation();
     const hasDiscount = item.sale > 0;
     const navigate = useNavigate();
+    const userID = Cookies.get("USER-ID");
 
     const [messageApi, contextHolder] = message.useMessage();
-    const success = () => {
-        messageApi.success(
-            i18n.language === 'uz' ? 'Mahsulot savatchaga qo`shildi' :
-                i18n.language === 'ru' ? 'Товар добавлен в корзину' :
-                    ''
+    const { mutate } = useCreate(endpoints.favorites.addFavoriteItem)
+    const { mutate: addCart } = useCreate(endpoints.cart.addCartItem)
+    const { mutate: deleteItem } = useDeleteById(endpoints.favorites.deleteFavriteItem)
+    const { data, isLoading } = useGetById(endpoints.favorites.getFavorites, userID)
+    const { data: productVariants, isLoading: loadvar } = useGetList(endpoints.products.searchProduct + item?.referenceNumber)
+    const [isLiked, setIsLiked] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+    const [selectedSize, setSelectedSize] = useState("");
+
+
+
+    console.log(" productVariants", productVariants);
+
+
+    // Foydalanuvchi sevimlilari orasida item mavjudligini tekshirish uchun
+    useEffect(() => {
+        if (data && item) {
+            const liked = data.some(fav => fav.product?.id === item.id);
+            setIsLiked(liked);
+        }
+    }, [data, item]);
+
+
+    // karzina qoshish
+    const addToCart = () => {
+        const selectedColorVariant = productVariants[selectedColorIndex];
+        const selectedSizeVariant = selectedColorVariant?.productSizeVariantList.find(
+            (item) => item.size === selectedSize
+        );
+
+        if (!selectedColorVariant || !selectedSizeVariant) {
+            toast.error(i18n.language === 'uz' ? "Rang yoki razmer tanlanmagan" : "Не выбран цвет или размер");
+            return;
+        }
+
+        console.log({
+            customerId: userID,
+            productSizeVariantId: selectedSizeVariant.id,
+            quantity: 1,
+        },);
+        addCart(
+            {
+                customerId: userID,
+                productSizeVariantId: selectedSizeVariant.id,
+                quantity: 1,
+            },
+            {
+                onSuccess: () => {
+                    toast.success(i18n.language === 'uz' ? "Savatga qo‘shildi" : "Добавлено в корзину", {
+                        onClose: () => {
+                            setIsOpen(false);
+                        },
+                        autoClose: 1000
+                    });
+                },
+            },
+            {
+                onError: () => {
+                    toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему");
+                },
+            }
         );
     };
 
+
+    // sevimlilarga qoshish
+    const addToFavorites = () => {
+        // agar foydalanuvchi ro`yhatdan o`tmagan bo`lsa
+        if (!userID) {
+            toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему");
+            return;
+        }
+        mutate({
+            customerId: userID,
+            productId: item.id,
+        },
+            {
+                onSuccess: () => {
+                    toast.success(
+                        i18n.language === 'uz'
+                            ? 'Mahsulot sevimlilarga qo`shildi'
+                            : 'Товар добавлен в избранное',
+                        {
+                            onClose: () => {
+                                setIsLiked(true);
+                            },
+                            autoClose: 1000
+                        }
+                    );
+                }
+            }
+
+        )
+    }
+
+    // delete sevimlilardan olish funksiyasi
+    const deleteFavoritesItem = () => {
+        const filteredData = data?.filter(items => items?.product?.id == item.id);
+        console.log(item.id);
+        console.log(filteredData);
+        deleteItem(
+            filteredData[0]?.id,
+            {
+                onSuccess: () => {
+                    toast.success(i18n.language === 'uz' ? 'Mahsulot sevimlilardan o`chirildi' : "Товар удален из избранного", {
+                        onClose: () => {
+                            setIsLiked(false);
+                        },
+                        autoClose: 1000
+                    })
+
+                }
+            },
+            {
+                onError: () => {
+                    toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему");
+                }
+            }
+        )
+    }
+
+    const handleLikeClick = () => {
+        if (isLiked) {
+            deleteFavoritesItem();
+        } else {
+            addToFavorites();
+        }
+    };
+
+
+    const handleAddToCart = () => {
+        const openModal = () => {
+            setIsOpen(true);
+        };
+        openModal();
+    };
     return (
         <div className="bg-white shadow-md overflow-hidden relative hover:shadow-sm transition-shadow duration-300">
             {contextHolder}
-            <button className="absolute top-3 right-3 z-10 bg-white rounded-full p-1 hover:shadow-lg">
-                <IoIosHeartEmpty onClick={success} className="text-black cursor-pointer hover:text-red-600 w-6 h-6" />
+            <button
+                className="absolute top-3 right-3 z-10 bg-white rounded-full p-1 hover:shadow-lg"
+                onClick={handleLikeClick}
+            >
+                {isLiked ? (
+                    <IoIosHeart className="text-[#0D0D0D] w-6 h-6 cursor-pointer" />
+                ) : (
+                    <IoIosHeartEmpty className="text-black hover:text-black w-6 h-6 cursor-pointer" />
+                )}
             </button>
-
             {hasDiscount && (
                 <div className="absolute top-4 left-3 z-20 bg-[#EEB415] text-white text-xs font-bold px-2 py-1 rounded">
                     {item.sale}%
@@ -56,10 +199,149 @@ const ProductCard = ({ item, onLike }) => {
                         )}
                     </div>
                 </div>
-                <span className='px-3 group'>
+                <button className='px-3 group'
+                    onClick={handleAddToCart}
+                >
                     <RiShoppingBag4Line className='text-2xl cursor-pointer transition duration-300 group-hover:scale-110 group-hover:text-black' />
-                </span>
+                </button>
             </div>
+
+            {/* handleAddToCart bosganida modal paydo bolish uchun bolim */}
+            {
+                isOpen && (
+                    <Modal
+                        open={isOpen}
+                        onCancel={() => setIsOpen(false)}
+                        footer={false}
+                        maskClosable={false}
+                        className="custom-modal"
+                        bodyStyle={{
+                            padding: "1.5rem",
+                            backgroundColor: "#fff",
+                            borderRadius: "1rem",
+                        }}
+                    >
+                        {productVariants.length > 0 && (
+                            <div className="space-y-4 font-tenor text-[#0D0D0D]">
+                                {/* Umumiy ma'lumotlar */}
+                                <div className="space-y-3">
+                                    {/* Nomi va narxi */}
+                                    <div className="text-center space-y-2">
+                                        <h2 className="text-[20px] font-light uppercase tracking-wide">
+                                            {i18n.language === "uz"
+                                                ? productVariants[0].nameUZB
+                                                : productVariants[0].nameRUS}
+                                        </h2>
+                                        {productVariants[0]?.sale > 0 ? (
+                                            <div className="space-y-1">
+                                                <p className="text-[28px] font-semibold">
+                                                    {productVariants[0].salePrice} so'm
+                                                </p>
+                                                <p className="text-gray-400 line-through text-[18px]">
+                                                    {productVariants[0].sellPrice} so'm
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <p className="text-[24px] font-semibold">
+                                                {productVariants[0].sellPrice} so'm
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    {/* Rang */}
+                                    <p className="text-[16px] font-medium" onClick={() => setShowColor(true)}>
+                                        Rang: {productVariants[selectedColorIndex].color.nameUZB}
+                                    </p>
+
+                                    {/* Rasmlar */}
+                                    <div className="flex gap-2 overflow-x-auto" style={{
+                                        scrollBehavior: 'smooth',
+                                        scrollbarWidth: 'none',
+                                        msOverflowStyle: 'none',
+                                    }}>
+                                        {productVariants.map((item, index) => (
+                                            <img
+                                                key={index}
+                                                onClick={() => {
+                                                    setSelectedColorIndex(index);
+                                                    setSelectedSize(""); // Rang o‘zgarsa razmerni tozalaymiz
+                                                }}
+                                                className={`w-[90px] h-[120px] object-cover cursor-pointer transition 
+        ${selectedColorIndex === index ? "border-2 border-black shadow-md" : "border-gray-300"}`}
+                                                src={item.productImages[0]?.url}
+                                                alt={`Rasm ${index + 1}`}
+                                            />
+                                        ))}
+                                    </div>
+                                    {/* O‘lcham tanlash tugmalari */}
+                                    <div className="flex gap-2 mt-2 flex-wrap">
+                                        {productVariants[selectedColorIndex].productSizeVariantList.map((variant, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setSelectedSize(variant.size)}
+                                                className={`px-4 py-2 border rounded uppercase text-sm 
+        ${selectedSize === variant.size
+                                                        ? "bg-black text-white"
+                                                        : "bg-white text-black hover:bg-gray-200"}`}
+                                            >
+                                                {variant.size}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Tanlangan o‘lcham ko‘rsatish */}
+                                    {selectedSize && (
+                                        <div className="mt-2">
+                                            <span className="text-[15px] font-medium">
+                                                {i18n.language === 'uz' ? "o‘lcham:" : "размер:"}
+                                            </span>
+                                            <button
+                                                className="ml-2 text-sm rounded-sm uppercase"
+                                                onClick={() => setShowSize(true)}
+                                            >
+                                                {selectedSize}
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {/* Xato ogohlantirish (faqat kerak bo‘lganda) */}
+                                    {!selectedSize && (
+                                        <p className="text-red-500 md:mt-3 mt-1 text-base">
+                                            ⚠️ {i18n.language === 'uz' ? 'Iltimos, o‘lchamni tanlang!' : 'Пожалуйста, выберите размер!'}
+                                        </p>
+                                    )}
+
+
+
+                                    {/* Qoldiq */}
+                                    {selectedSize && (
+                                        <p className="text-[16px]">
+                                            Sotuvda bor:{" "}
+                                            <span className="text-base">
+                                                {productVariants[0].productSizeVariantList[0].quantity} ta
+                                            </span>
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Tugmalar */}
+                                <div className="flex gap-2 pt-2">
+                                    <button className="flex-1 h-12 border border-black hover:bg-black hover:text-white transition uppercase"
+                                        onClick={addToCart}
+                                    >
+                                        Savatga qo’shish
+                                    </button>
+                                    <button className="flex-1 h-12 bg-black text-white hover:bg-gray-800 transition uppercase">
+                                        Sotib olish
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </Modal>
+
+
+                )
+            }
         </div>
     );
 };

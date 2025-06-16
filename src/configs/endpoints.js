@@ -36,5 +36,7 @@ export const endpoints = {
   },
   favorites: {
     addFavoriteItem: "/api/likedItem/addLikedItem",
+    deleteFavriteItem: "/api/likedItem/deleteLikedItem/",
+    getFavorites: "/api/likedItem/getByCustomerId/",
   }
 };
