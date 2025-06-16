@@ -9,3 +9,7 @@
   --color-background: #f9f9f9;
   --color-gold: #eeb415;
 }
+
+.custom-rate .ant-rate-star-zero svg {
+  color: #bbb !important; /* tanlanmagan yulduzcha rangi */
+}

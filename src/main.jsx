@@ -10,7 +10,17 @@ import { ConfigProvider } from "antd";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={new QueryClient()}>
-      <ConfigProvider theme={{ token: { colorPrimary: "#0d0d0d" } }}>
+      <ConfigProvider
+        theme={{
+          token: { colorPrimary: "#0d0d0d" },
+          components: {
+            Tabs: {
+              itemColor: "#bbb",
+              itemActiveColor: "#0d0d0d",
+            },
+          },
+        }}
+      >
         <BrowserRouter>
           <App />
         </BrowserRouter>

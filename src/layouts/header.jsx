@@ -13,6 +13,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useGetList } from "../services/query/useGetList";
 import Cookies from "js-cookie";
 import { RiShoppingBag3Fill } from "react-icons/ri";
+import { useGetById } from "../services/query/useGetById";
 
 const Header = () => {
   const location = useLocation();
@@ -23,9 +24,10 @@ const Header = () => {
   const [brandName, setBrandName] = useState("");
 
   const userID = Cookies.get("USER-ID");
-  const { data } = useGetList("/api/cartItem/byCustomerId/" + userID);
-  const { data: favorites } = useGetList(
-    "/api/likedItem/getByCustomerId/" + userID
+  const { data } = useGetById("/api/cartItem/byCustomerId/", userID);
+  const { data: favorites } = useGetById(
+    "/api/likedItem/getByCustomerId/",
+    userID
   );
 
   const handleBoard = (name) => {

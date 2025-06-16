@@ -1,11 +1,11 @@
-import React from "react";
-import { useGetList } from "../../services/query/useGetList";
 import Cookies from "js-cookie";
 import ProductCard from "../../components/ProductCart/ProductCard";
+import { useGetById } from "../../services/query/useGetById";
 const Favorites = () => {
   const userID = Cookies.get("USER-ID");
-  const { data: favorites } = useGetList(
-    "/api/likedItem/getByCustomerId/" + userID
+  const { data: favorites } = useGetById(
+    "/api/likedItem/getByCustomerId/",
+    userID,
   );
 
   return (
