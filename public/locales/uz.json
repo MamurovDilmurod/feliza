@@ -9,7 +9,7 @@
     "nessa": "Nessa",
     "close": "Yopish",
     "forget": {
-      "password-recovery":"Parolni Tiklash",
+      "password-recovery": "Parolni Tiklash",
       "change-password": "Parolni o’zgartirish",
       "new-password": "Yangi parol",
       "edit-password": "Parolni yangilash"
@@ -82,6 +82,62 @@
     "delivery": "Yetkazib berish:",
     "coupons-used": "Foydalanilgan kuponlar:",
     "total-price": "Umumiy narx:"
+  },
+  "profile": {
+    "status": {
+      "ball": "ball",
+      "status": "Status",
+      "title": "Statuslar",
+      "desc": "Biz mijozlarimiz haqida qayg’uramiz va ular uchun eng yaxshi xizmat ko’rsatishni maqsad qilganmiz.Shu saababl, sodiq mijozlar uchun maxsusu sodiqlik dasturini yaratdik. Har bir mijoga Bronza Silver va Gold statuslari beriladi. Har safar statusingiz oshganda, belgilangan miqdorda kupon bilan taqdirlanadi. Har 1 000 so’m 1 ballga teng",
+      "start": {
+        "title": "Start",
+        "desc": "0 balldan 1 499 gacha"
+      },
+      "bronze": {
+        "title": "Bronza",
+        "desc": "Ballaringiz 1 500 dan 2 999 gacha"
+      },
+      "silver": {
+        "title": "Silver",
+        "desc": "Ballaringiz 3 000 dan 5 999 gacha"
+      },
+      "gold": {
+        "title": "Gold",
+        "desc": "Ballaringiz 6 000 va keyingi har 1 000 ball uchun alohida sovg’alar."
+      }
+    },
+    "tabs": {
+      "profile": "Profil ma’lumotlari",
+      "orders": "Buyurtmalarim",
+      "comments": "Sharhlarim",
+      "address": "Manzilim",
+      "notifications": "Xabarnomalar",
+      "status": "Statusim",
+      "coupons": "Kuponlarim"
+    },
+    "modal": {
+      "log-out": "Chiqish",
+      "title": "Profiledan chiqmoqchimisiz?",
+      "yes": "Ha",
+      "no": "Yo'q",
+      "add-comment": {
+        "tab1":"Sharh qoldirilmagan",
+        "tab2":"Sharh qoldirilgan",
+        "title": "Sharh qoldirish",
+        "rating": {
+          "desc": "Baholash uchun yulduzchaga teging",
+          "error": "Iltimos baholang!"
+        },
+        "img": {
+          "title": "Rasm qo’shish",
+          "desc": "Siz olgan mahsulotning rasmlarini bu yerga yuklang"
+        },
+        "content": {
+          "desc": "Mahsulot sizga qanchalik yoqdi fikrlaringizni yozing.",
+          "error": "Iltimos fikrlaringizni yozing."
+        }
+      }
+    }
   },
   "footer": {
     "title1": "Biz haqimizda",

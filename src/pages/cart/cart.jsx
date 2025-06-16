@@ -20,9 +20,7 @@ const Cart = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { i18n, t } = useTranslation();
   const userID = Cookies.get("USER-ID");
-  const { data, isLoading } = useGetList(
-    "/api/cartItem/byCustomerId/" + userID
-  );
+  const { data, isLoading } = useGetById("/api/cartItem/byCustomerId/", userID);
   const [selectedEditCart, setselectedEditCart] = useState("");
   const [selectedEditProductId, setselectedEditProductId] = useState("");
   const [selectedEditCartId, setselectedEditCartId] = useState("");
@@ -177,7 +175,7 @@ const Cart = () => {
                   )}
 
                   <img
-                    className="w-[130px]"
+                    className="w-[130px] min-w-[100px]"
                     src={item.productImages[0].url}
                     alt=""
                   />
@@ -219,8 +217,8 @@ const Cart = () => {
                     </p>
                   </div>
 
-                  <div className="flex justify-between items-center flex-wrap gap-3">
-                    <div className="flex gap-8">
+                  <div className="flex justify-between items-center flex-wrap lg:gap-3">
+                    <div className="flex flex-col lg:flex-row gap-0 lg:gap-8">
                       <h1 className="font-tenor font-normal text-sm text-accent leading-[150%]">
                         {t("cart.color")}:{" "}
                         {i18n.language == "uz"
@@ -235,7 +233,7 @@ const Cart = () => {
                       </h1>
                     </div>
 
-                    <div className="flex gap-10">
+                    <div className="flex gap-10 w-full lg:w-fit justify-end">
                       <MdOutlineEdit
                         className="cursor-pointer"
                         onClick={() => (
