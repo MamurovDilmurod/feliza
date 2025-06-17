@@ -37,7 +37,8 @@ function Menu2CategoryList() {
         }}>
             {sortedData.map((item, indx) => (
                 <div
-                    onClick={() => navigate(`/categoryDetail/${item.category.id}`)}
+                    onClick={() => navigate(`/categoryDetail/${item.category.id}`, window.scrollTo({ top: 0, behavior: 'smooth' })
+                    )}
                     key={indx}
                     className="flex-shrink-0 md:w-[360px] w-[240px] cursor-pointer group relative mr-2"
                 >

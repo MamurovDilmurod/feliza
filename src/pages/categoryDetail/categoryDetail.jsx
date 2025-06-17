@@ -69,7 +69,10 @@ function CategoryDetail() {
             {hasMore && (
                 <div className="flex justify-center mt-4">
                     <button
-                        onClick={loadMoreProducts}
+                        onClick={() => {
+                            loadMoreProducts();
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
                         className='py-2 px-16 border border-[#5B5B5B] cursor-pointer rounded-sm hover:bg-[#5B5B5B] hover:text-white transition-colors duration-500'
                         disabled={isFetching}
                     >

@@ -220,7 +220,9 @@ function ProductDetail() {
                                     return (
                                         <div
                                             key={index}
-                                            onClick={() => isActive && setSelectedColorIndex(index)}
+                                            onClick={() => isActive && setSelectedColorIndex(index,
+                                                window.scrollTo({ top: 0, behavior: 'smooth' })
+                                            )}
                                             className={`
                 relative w-[78px] overflow-hidden cursor-pointer border 
                 ${isSelected ? 'border-black' : 'border-gray-300'} 
