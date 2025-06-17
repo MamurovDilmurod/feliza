@@ -34,7 +34,9 @@ function Menu1CategoryList() {
             <div className="flex gap-2 sm:gap-6 font-tenor w-max">
                 {sortedData.map((item, index) => (
                     <div
-                        onClick={() => navigate(`/categoryDetail/${item.category.id}`)}
+                        onClick={() => navigate(`/categoryDetail/${item.category.id}`,
+                            window.scrollTo({ top: 0, behavior: 'smooth' })
+                        )}
                         key={index}
                         className="min-w-[160px] sm:min-w-[240px] relative group overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
                     >
