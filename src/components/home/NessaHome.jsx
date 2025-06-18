@@ -48,7 +48,9 @@ function NessaHome() {
                     }
                 </p>
                 <button
-                    onClick={() => navigate(`/categoryDetail/9`)}
+                    onClick={() => navigate(`/categoryDetail/9`,
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                    )}
                     className='flex md:mt-20 mt-10 cursor-pointer items-center gap-2 py-2 px-6 border border-[#5B5B5B] hover:bg-[#5B5B5B] hover:text-white transition duration-300 rounded'>
                     {
                         i18n.language === 'uz' ? 'Barchasini ko’rish' : 'Посмотреть все'
