@@ -204,8 +204,19 @@ const ProductCard = ({ item, onLike }) => {
             <div>
                 {contextHolder}
                 <button
-                    className="absolute top-3 right-3 bg-white rounded-full p-1 hover:shadow-lg"
-                    onClick={handleLikeClick}
+                    className="absolute top-3 right-3 bg-white rounded-full p-1 hover:shadow-lg disabled:opacity-50"
+                    onClick={() => {
+                        const quantity = productVariants[0]?.productSizeVariantList[0]?.quantity;
+                        if (quantity > 0) {
+                            handleLikeClick();
+                        } else {
+                            toast.warning(i18n.language === 'uz'
+                                ? "Mahsulot qolmagan, sevimlilarga qo‘shib bo‘lmaydi"
+                                : "Товар закончился, нельзя добавить в избранное", {
+                                autoClose: 1000
+                            });
+                        }
+                    }}
                 >
                     {isLiked ? (
                         <IoIosHeart className="text-[#0D0D0D] w-6 h-6 cursor-pointer" />
@@ -213,6 +224,7 @@ const ProductCard = ({ item, onLike }) => {
                         <IoIosHeartEmpty className="text-black hover:text-black w-6 h-6 cursor-pointer" />
                     )}
                 </button>
+
                 {hasDiscount && (
                     <div className="absolute top-4 left-3 bg-[#EEB415] text-white text-xs font-bold px-2 py-1 rounded">
                         {item.sale}%
@@ -250,15 +262,15 @@ const ProductCard = ({ item, onLike }) => {
                     </button>
                 </div>
             </div>
-
             {/* handleAddToCart bosganida modal paydo bolish uchun bolim */}
             {
                 isOpen && (
-                    <Modal
+                    <Drawer
                         open={isOpen}
-                        onCancel={() => setIsOpen(false)}
+                        onClose={() => setIsOpen(false)}
                         footer={false}
                         maskClosable={false}
+                        width={464}
                         className="custom-modal"
                         bodyStyle={{
                             padding: "10px",
@@ -391,24 +403,21 @@ const ProductCard = ({ item, onLike }) => {
                                             </button>
                                         )
                                     }
-                                    {/* <button className="flex-1 cursor-pointer md:h-12 h-10 border border-black hover:bg-black hover:text-white transition uppercase"
-                                        onClick={addToCart}
-                                    >
-                                        {i18n.language === 'uz' ? 'Savatga qo‘shish' : 'Добавить в корзину'}
-                                    </button> */}
+                                    {
+                                        productVariants[0].productSizeVariantList[0].quantity === 0 ? (
+                                            <button
+                                                disabled
+                                                className="flex-1 cursor-not-allowed md:h-12 h-10 border border-gray-300 bg-gray-300 text-gray-500 uppercase">
+                                                {i18n.language === 'uz' ? 'Mahsulot qolmagan' : 'Товар закончился'}
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={addOrders} className="flex-1 cursor-pointer md:h-12 h-10 bg-black text-white hover:bg-gray-800 transition uppercase">
+                                                {i18n.language === 'uz' ? ' Sotib olish' : 'Купить'}
+                                            </button>
 
-                                    <button onClick={addOrders} className="flex-1 cursor-pointer md:h-12 h-10 bg-black text-white hover:bg-gray-800 transition uppercase">
-                                        {i18n.language === 'uz' ? ' Sotib olish' : 'Купить'}
-                                    </button>
-                                    {/* <OrderCard
-                                        cart={[cartItemId]}
-                                        sum={
-                                            productVariants[0]?.sale > 0
-                                                ? productVariants[0]?.salePrice
-                                                : productVariants[0]?.sellPrice
-                                        }
-                                    /> */}
-
+                                        )
+                                    }
                                 </div>
                             </div>
                         )}
@@ -429,7 +438,7 @@ const ProductCard = ({ item, onLike }) => {
                             />
                         </Drawer>
 
-                    </Modal>
+                    </Drawer>
 
 
                 )
