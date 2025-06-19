@@ -375,7 +375,18 @@ function ProductDetail() {
                             <div className="flex gap-4">
                                 {/* sevimlilar qoshish */}
                                 <button
-                                    onClick={addToFavorites}
+                                    onClick={() => {
+                                        const quantity = productVariants[0]?.productSizeVariantList[0]?.quantity;
+                                        if (quantity > 0) {
+                                            addToFavorites();
+                                        } else {
+                                            toast.warning(i18n.language === 'uz'
+                                                ? "Mahsulot qolmagan, sevimlilarga qo‘shib bo‘lmaydi"
+                                                : "Товар закончился, нельзя добавить в избранное", {
+                                                autoClose: 1000
+                                            });
+                                        }
+                                    }}
                                     className="p-2 border border-gray-300 text-gray-700 hover:bg-red-500 hover:text-white transition duration-300 flex items-center justify-center"
                                     title="Sevimlilar"
                                 >
@@ -430,7 +441,20 @@ function ProductDetail() {
                             {/* sotib olish */}
 
                             {
-                                data?.productSizeVariantList?.find(item => item.size === selectedSize)?.quantity === 0 ? (
+                                !selectedSize || selectedColorIndex === -1 ? (
+                                    <button
+                                        onClick={() => {
+                                            toast.error(
+                                                i18n.language === 'uz'
+                                                    ? "Iltimos, rang yoki razmer tanlang"
+                                                    : "Пожалуйста, выберите цвет и размер"
+                                            );
+                                        }}
+                                        className="w-full h-12 border border-black bg-gray-200 text-gray-500 cursor-not-allowed"
+                                    >
+                                        {i18n.language === 'uz' ? "Rang yoki razmer tanlang" : "Выберите цвет и размер"}
+                                    </button>
+                                ) : data?.productSizeVariantList?.find(item => item.size === selectedSize)?.quantity === 0 ? (
                                     <button
                                         disabled
                                         className="w-full h-12 border border-black bg-gray-200 text-gray-500 cursor-not-allowed"
@@ -439,7 +463,9 @@ function ProductDetail() {
                                     </button>
                                 ) : (
                                     <button
-                                        onClick={() => (addOrder(), showDrawer())}
+                                        onClick={() => {
+                                            setDrawerOpen(true);
+                                        }}
                                         className="w-full h-12 border border-black hover:bg-black cursor-pointer hover:text-white flex items-center justify-center gap-2 transition duration-300"
                                     >
                                         <span>
@@ -448,6 +474,7 @@ function ProductDetail() {
                                     </button>
                                 )
                             }
+
                             {/* Drawer */}
                             <Drawer
                                 width={464}
@@ -455,7 +482,9 @@ function ProductDetail() {
                                 onClose={onClose}
                                 placement="right"
                             >
-                                <OrderCard cart={[cartItemId]} sum={data?.sale > 0 ? data?.sellPrice : data?.sellPrice} />
+                                <OrderCard cart={[cartItemId]} sum={data?.sale > 0
+                                    ? data?.salePrice
+                                    : data?.sellPrice} />
                             </Drawer>
                         </div>
 
@@ -547,12 +576,22 @@ function ProductDetail() {
                 <div className="flex gap-3 items-center">
                     {/* Sevimlilar tugmasi */}
                     <button
-                        onClick={addToFavorites}
-                        className="w-11 h-11 flex items-center justify-center rounded border border-gray-300 hover:bg-red-500 hover:text-white transition"
+                        onClick={() => {
+                            const quantity = productVariants[0]?.productSizeVariantList[0]?.quantity;
+                            if (quantity > 0) {
+                                addToFavorites();
+                            } else {
+                                toast.warning(i18n.language === 'uz'
+                                    ? "Mahsulot qolmagan, sevimlilarga qo‘shib bo‘lmaydi"
+                                    : "Товар закончился, нельзя добавить в избранное", {
+                                    autoClose: 1000
+                                });
+                            }
+                        }}
+                        className="p-2 border border-gray-300 text-gray-700 hover:bg-red-500 hover:text-white transition duration-300 flex items-center justify-center"
                         title="Sevimlilar"
-
                     >
-                        <FaRegHeart className="text-xl" />
+                        <FaRegHeart className="text-2xl" />
                     </button>
 
                     {/* Count boshqaruvi */}
@@ -604,12 +643,41 @@ function ProductDetail() {
                 </div>
 
                 {/* Sotib olish tugmasi */}
-                <button
-                    onClick={showDrawer}
-                    className="w-full h-12 rounded border border-black hover:bg-black hover:text-white transition"
-                >
-                    {i18n.language === 'uz' ? "Sotib olish" : "Купить"}
-                </button>
+
+                {
+                    !selectedSize || selectedColorIndex === -1 ? (
+                        <button
+                            onClick={() => {
+                                toast.error(
+                                    i18n.language === 'uz'
+                                        ? "Iltimos, rang yoki razmer tanlang"
+                                        : "Пожалуйста, выберите цвет и размер"
+                                );
+                            }}
+                            className="w-full h-12 border border-black bg-gray-200 text-gray-500 cursor-not-allowed"
+                        >
+                            {i18n.language === 'uz' ? "Rang yoki razmer tanlang" : "Выберите цвет и размер"}
+                        </button>
+                    ) : data?.productSizeVariantList?.find(item => item.size === selectedSize)?.quantity === 0 ? (
+                        <button
+                            disabled
+                            className="w-full h-12 border border-black bg-gray-200 text-gray-500 cursor-not-allowed"
+                        >
+                            {i18n.language === 'uz' ? "Mahsulot qolmagan" : "Нет в наличии"}
+                        </button>
+                    ) : (
+                        <button
+                            onClick={() => {
+                                setDrawerOpen(true);
+                            }}
+                            className="w-full h-12 border border-black hover:bg-black cursor-pointer hover:text-white flex items-center justify-center gap-2 transition duration-300"
+                        >
+                            <span>
+                                {i18n.language === 'uz' ? "Sotib olish" : "Купить"}
+                            </span>
+                        </button>
+                    )
+                }
             </div>
 
         </div>
