@@ -465,6 +465,7 @@ function ProductDetail() {
                                     <button
                                         onClick={() => {
                                             setDrawerOpen(true);
+                                            addOrder();
                                         }}
                                         className="w-full h-12 border border-black hover:bg-black cursor-pointer hover:text-white flex items-center justify-center gap-2 transition duration-300"
                                     >
@@ -654,7 +655,7 @@ function ProductDetail() {
                                         : "Пожалуйста, выберите цвет и размер"
                                 );
                             }}
-                            className="w-full h-12 border border-black bg-gray-200 text-gray-500 cursor-not-allowed"
+                            className="w-full h-12 b     border-black bg-gray-200 text-gray-500 cursor-not-allowed"
                         >
                             {i18n.language === 'uz' ? "Rang yoki razmer tanlang" : "Выберите цвет и размер"}
                         </button>

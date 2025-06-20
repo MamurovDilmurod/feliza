@@ -4,9 +4,11 @@ import { RiTelegram2Line } from "react-icons/ri";
 import { IoLogoYoutube } from "react-icons/io";
 import { useTranslation } from 'react-i18next';
 import Link from 'antd/es/typography/Link';
+import { useNavigate } from 'react-router-dom';
 
 const Footer = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const socialLinks = [
     {
@@ -22,7 +24,7 @@ const Footer = () => {
     <div className="max-w-[1280px] mx-auto pt-24 pb-10 px-4 font-tenor">
       <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
         <span className="border-y w-full lg:w-[562px] border-stone-400"></span>
-        <img src={feliza_logo} alt="Feliza logo" className='w-20' />
+        <img src={feliza_logo} alt="Feliza logo" className='w-20 cursor-pointer' onClick={() => navigate('/')} />
         <span className="border-y w-full lg:w-[562px] border-[#858585]"></span>
       </div>
 
