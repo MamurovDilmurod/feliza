@@ -4,6 +4,9 @@ import { FaRegHeart, FaRegUser } from "react-icons/fa6";
 import { LuShoppingBag } from "react-icons/lu";
 import FeIcon from "./fe-icon";
 import { useLocation, useNavigate } from "react-router-dom";
+import FavoritesIcon from "./favorites-icon";
+import CartIcon from "./cart-icon";
+import ProfileIcon from "./profile-icon";
 
 export const MobileBottomTab = () => {
   const location = useLocation();
@@ -19,15 +22,15 @@ export const MobileBottomTab = () => {
     },
     {
       path: "/favorites",
-      icon: <FaRegHeart size={24} />,
+      icon: <FavoritesIcon />,
     },
     {
       path: "/cart",
-      icon: <LuShoppingBag size={24} />,
+      icon: <CartIcon />,
     },
     {
       path: "/profile",
-      icon: <FaRegUser size={24} />,
+      icon: <ProfileIcon />,
     },
   ];
   return (

@@ -12,6 +12,7 @@ import {
   PiMapPinLine,
   PiPackage,
   PiShootingStar,
+  PiUser,
 } from "react-icons/pi";
 import { RiCoupon2Line } from "react-icons/ri";
 import { ProfileInfoCard } from "./profile-info-card";
@@ -21,6 +22,7 @@ import UserCouponCard from "./user-coupon-card";
 import { StatusCard } from "./status-card";
 import { useTranslation } from "react-i18next";
 import { CommentsCard } from "./comments-card";
+import { MyOrderCard } from "./my-order-card";
 
 export const DesktopProfileCard = () => {
   const { t } = useTranslation();
@@ -57,7 +59,7 @@ export const DesktopProfileCard = () => {
     {
       label: "profile.tabs.orders",
       icon: <PiPackage size={24} />,
-      children: <>child 2</>,
+      children: <MyOrderCard />,
       key: "orders",
     },
     {
@@ -102,7 +104,7 @@ export const DesktopProfileCard = () => {
         <div className="flex h-screen bg-background">
           {/* Left Sidebar */}
           <div
-            className={`w-[390px] bg-[url(${userData?.image.url})]  text-white flex flex-col gap-20 justify-between`}
+            className={`w-[390px] bg-[url(${userData?.image?.url})]  text-white flex flex-col gap-20 justify-between`}
           >
             {/* Profile Info */}
             <div className="border">
@@ -110,7 +112,9 @@ export const DesktopProfileCard = () => {
                 <div
                   className="w-full h-full max-w-[390px] max-h-[200px] min-w-[390px] min-h-[200px]"
                   style={{
-                    backgroundImage: `url(${userData?.image.url})`,
+                    background: "#444",
+                    backgroundImage:
+                      userData?.image?.url && `url(${userData?.image?.url})`,
                     backgroundSize: "cover",
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",
@@ -118,11 +122,17 @@ export const DesktopProfileCard = () => {
                   }}
                 ></div>
                 <div className="absolute top-0 h-full flex flex-col items-center justify-center gap-2 mx-auto w-full z-30 text-center">
-                  <img
-                    src={userData?.image.url}
-                    alt="Profile"
-                    className="w-20 h-20 rounded-full object-cover border-4 border-white"
-                  />
+                  {userData?.image?.url ? (
+                    <img
+                      src={userData?.image?.url}
+                      alt="Profile"
+                      className="w-20 h-20 rounded-full object-cover border-4 border-white"
+                    />
+                  ) : (
+                    <div className="border-2 size-20 rounded-full flex justify-center items-center">
+                      <PiUser size={36} />
+                    </div>
+                  )}
                   <div className="text-lg font-semibold">
                     <h1>{userData?.fullName}</h1>
                     <p>{userData?.status?.statusName}</p>
@@ -174,8 +184,6 @@ export const DesktopProfileCard = () => {
           </div>
         </div>
       </div>
-
-      
 
       <Modal
         open={open}

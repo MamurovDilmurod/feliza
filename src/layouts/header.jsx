@@ -1,34 +1,23 @@
 import { useTranslation } from "react-i18next";
 import Logo from "../assets/images/feliza-logo.png";
 import LanguageSelector from "../components/header/language-selector";
-import { FaHeart, FaRegHeart } from "react-icons/fa6";
-import { LuShoppingBag } from "react-icons/lu";
 import { CiSearch } from "react-icons/ci";
-import { Badge, Button, Input } from "antd";
+import { Button, Input } from "antd";
 import { useEffect, useState } from "react";
 import UserAuth from "../components/header/user-auth";
 import { HeaderBoard } from "../components/header/header-board";
 import { HeaderSearch } from "../components/header/header-search";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useGetList } from "../services/query/useGetList";
-import Cookies from "js-cookie";
-import { RiShoppingBag3Fill } from "react-icons/ri";
-import { useGetById } from "../services/query/useGetById";
+import FavoritesIcon from "../components/header/favorites-icon";
+import CartIcon from "../components/header/cart-icon";
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [showBoard, setShowBoard] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const navigate = useNavigate();
   const [brandName, setBrandName] = useState("");
-
-  const userID = Cookies.get("USER-ID");
-  const { data } = useGetById("/api/cartItem/byCustomerId/", userID);
-  const { data: favorites } = useGetById(
-    "/api/likedItem/getByCustomerId/",
-    userID
-  );
 
   const handleBoard = (name) => {
     setShowSearch(false);
@@ -93,40 +82,8 @@ const Header = () => {
         </div>
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center justify-between gap-[53px]">
-            <Badge
-              size="default"
-              styles={{
-                indicator: { color: "black" },
-              }}
-              style={{ border: "1px solid black" }}
-              color="white"
-              className="!font-tenor !text-xs cursor-pointer"
-              count={favorites?.length}
-              onClick={() => navigate("/favorites")}
-            >
-              {location.pathname == "/favorites" ? (
-                <FaHeart size={21} />
-              ) : (
-                <FaRegHeart size={21} />
-              )}
-            </Badge>
-            <Badge
-              size="default"
-              styles={{
-                indicator: { color: "black" },
-              }}
-              style={{ border: "1px solid black" }}
-              color="white"
-              className="!font-tenor !text-xs cursor-pointer"
-              count={data?.length}
-              onClick={() => navigate("/cart")}
-            >
-              {location.pathname == "/cart" ? (
-                <RiShoppingBag3Fill size={21} />
-              ) : (
-                <LuShoppingBag size={21} />
-              )}
-            </Badge>
+            <FavoritesIcon />
+            <CartIcon />
             <UserAuth />
             <LanguageSelector />
           </div>
