@@ -44,6 +44,11 @@
       "btn": "Looklarni ko’ring"
     }
   },
+  "favorites": {
+    "title": "Sevimlilar",
+    "empty": "Hozircha sevimli mahsulotlar yo’q.",
+    "desc": "Xarid qilishni boshlang va sizga yoqqan mahsulotlarni Sevimlilar bo’limida saqlang "
+  },
   "cart": {
     "title": "Savatcha",
     "select-all": "Barchasini tanlash",
@@ -66,6 +71,26 @@
     }
   },
   "order": {
+    "my": {
+      "active": "Faol Buyurtmalar",
+      "history": "Buyurtmalar tarixi",
+      "status": "Status",
+      "reached": "Yetkazildi",
+      "in-progress": "Jarayonda",
+      "canceled": "Bekor qilindi",
+      "time": "Vaqti",
+      "order-number": "Buyurtma ID",
+      "location": "Manzil",
+      "products": "Mahsulotlar",
+      "name": "Nomi"
+    },
+    "status": {
+      "rejected": "Rad etildi",
+      "pack": "Tayyor",
+      "send": "Yetkazilmoqda",
+      "reached": "Yetkazildi",
+      "new": "Qabul qilindi"
+    },
     "customer-info": "Xaridor ma’lumotlari:",
     "shipp-addr": "Yetkazib berish manzili:",
     "add-addr": "Boshqa manzil qo’shish",
@@ -121,8 +146,8 @@
       "yes": "Ha",
       "no": "Yo'q",
       "add-comment": {
-        "tab1":"Sharh qoldirilmagan",
-        "tab2":"Sharh qoldirilgan",
+        "tab1": "Sharh qoldirilmagan",
+        "tab2": "Sharh qoldirilgan",
         "title": "Sharh qoldirish",
         "rating": {
           "desc": "Baholash uchun yulduzchaga teging",
@@ -136,6 +161,26 @@
           "desc": "Mahsulot sizga qanchalik yoqdi fikrlaringizni yozing.",
           "error": "Iltimos fikrlaringizni yozing."
         }
+      }
+    },
+    "coupons": {
+      "empty": "Hozircha kuponlar yo’q.",
+      "desc": "Har bir xaridlardan keyin sizga belgilangan kuponlar berib boriladi. Kuponlarni keyingi xaridlar uchun chegirma sifatida ishlatishingiz mumkin"
+    },
+    "comments": {
+      "empty": "Sharh qoldirish uchun mahsulot sotib oling!"
+    },
+    "input": {
+      "messages": {
+        "current-password": "Hozirgi parol",
+        "password-error": "Hozirgi parolingiz noto'g'ri! Iltimos, qayta urinib ko'ring!",
+        "current-password-error": "Iltimos, Hozirgi parolingizni kiriting!",
+        "new-password": "Yangi parol",
+        "new-password-error": "Iltimos, Yangi parolingizni kiriting!",
+        "confirm": "Tasdiqlash",
+        "confirm-error": "Iltimos, Yangi parolingizni tasdiqlang!",
+        "min-6": "Parol 6 ta belgidan kam bo’lmasligi kerak",
+        "not-match": "Siz kiritgan yangi parolga mos emas!"
       }
     }
   },

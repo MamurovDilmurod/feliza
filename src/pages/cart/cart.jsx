@@ -108,6 +108,7 @@ const Cart = () => {
       }
     );
   };
+  console.log(filteredProduct);
 
   return (
     <>
@@ -519,6 +520,13 @@ const Cart = () => {
                 {quantityEdit}
               </p>
               <Button
+                disabled={
+                  filteredProduct[0]?.productSizeVariantList?.find(
+                    (item) => item.id === selectedEditProductSize
+                  )?.quantity <= quantityEdit
+                    ? true
+                    : false
+                }
                 icon={<PiPlus color="#0d0d0d" />}
                 onClick={() => setquantityEdit(quantityEdit + 1)}
               />

@@ -37,4 +37,32 @@ export const routes = [
     path: "/profile",
     element: React.lazy(() => import("../pages/profile/profile")),
   },
+  {
+    path: "/my-profile",
+    element: React.lazy(() => import("../pages/profile/my-profile")),
+  },
+  {
+    path: "/my-orders",
+    element: React.lazy(() => import("../pages/profile/my-orders")),
+  },
+  {
+    path: "/my-comments",
+    element: React.lazy(() => import("../pages/profile/my-comments")),
+  },
+  {
+    path: "/my-address",
+    element: React.lazy(() => import("../pages/profile/my-address")),
+  },
+  {
+    path: "/my-notifications",
+    element: React.lazy(() => import("../pages/profile/my-notifications")),
+  },
+  {
+    path: "/my-status",
+    element: React.lazy(() => import("../pages/profile/my-status")),
+  },
+  {
+    path: "/my-coupons",
+    element: React.lazy(() => import("../pages/profile/my-coupons")),
+  },
 ];
