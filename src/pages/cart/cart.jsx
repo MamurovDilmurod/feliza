@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useGetList } from "../../services/query/useGetList";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { Button, Checkbox, Drawer, message, Modal } from "antd";
@@ -108,7 +107,6 @@ const Cart = () => {
       }
     );
   };
-  console.log(filteredProduct);
 
   return (
     <>

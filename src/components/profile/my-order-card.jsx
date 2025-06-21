@@ -1,18 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import EmptyOrders from "../../assets/icons/empty-orders";
 import { useGetById } from "../../services/query/useGetById";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
-import {
-  IoIosArrowDown,
-  IoIosArrowForward,
-  IoIosArrowUp,
-  IoIosCheckmarkCircle,
-} from "react-icons/io";
-import { FaCircleCheck } from "react-icons/fa6";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import formatPrice from "../../utils/formatPrice";
-import { Checkbox, Skeleton, Steps } from "antd";
+import { Skeleton } from "antd";
 import OrderStepper from "./order-stepper";
+import ProductCard from "../ProductCart/ProductCard";
 
 export const MyOrderCard = () => {
   const userID = Cookies.get("USER-ID");
@@ -21,13 +16,18 @@ export const MyOrderCard = () => {
     "/api/order/getAllByCustomerId/",
     userID
   );
+
+  const { data: favorites } = useGetById(
+    "/api/likedItem/getByCustomerId/",
+    userID
+  );
   const [isOpenProduct, setIsOpenProduct] = useState({});
   const reachedOrders = data?.filter(
     (item) => item.orderStatusType === "REACHED"
   );
 
   const rejectedOrders = data?.filter(
-    (item) => item.orderStatusType === "REJECTED"
+    (item) => item.orderStatusType != "REACHED"
   );
   console.log(data);
 
@@ -50,7 +50,7 @@ export const MyOrderCard = () => {
   return (
     <div>
       {data?.length > 0 ? (
-        <div className="">
+        <div className="space-y-8">
           <div className="space-y-6 font-tenor">
             <h1 className="text-center text-xl ">{t("order.my.active")}:</h1>
 
@@ -256,8 +256,38 @@ export const MyOrderCard = () => {
           </div>
         </div>
       ) : (
-        <div className="">
-          <EmptyOrders /> <p></p>
+        <div className="h-full">
+          <div className="flex flex-col justify-center items-center gap-5 mt-24">
+            <EmptyOrders />
+            <h1 className="font-tenor font-normal text-primary">
+              {i18n.language == "uz"
+                ? "Hozircha buyurtmalar yo’q"
+                : "Заказов пока нет."}
+            </h1>
+          </div>
+          {favorites.length > 0 && (
+            <div className="mt-28">
+              <div className="pt-5 lg:pt-10 pb-[30px]">
+                <h1 className="font-tenor font-normal text-2xl text-primary uppercase">
+                  {t("favorites.title")}
+                  <span className="text-secondary">
+                    {favorites?.length == 0 ? "" : `(${favorites?.length})`}
+                  </span>
+                </h1>
+              </div>
+
+              <div
+                style={{ scrollbarWidth: "none" }}
+                className="flex justify-between gap-4 overflow-x-scroll"
+              >
+                {favorites?.map((item) => (
+                  <div className="min-w-[296px]">
+                    <ProductCard item={item?.product} key={item.id} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

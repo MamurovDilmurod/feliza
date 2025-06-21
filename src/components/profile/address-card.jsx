@@ -48,10 +48,8 @@ const AddressCard = () => {
   console.log(selectedAddress);
   console.log(selectedRegion);
 
-  // const postAddress = () => {};
-
   if (isLoading) {
-    return <>Loading...</>;
+    return <></>;
   }
   return (
     <div>
@@ -227,7 +225,7 @@ const AddressCard = () => {
           )}
 
           {selectedRegion == 1 && (
-            <Flex align="center" gap={16}>
+            <Flex align="center" className="gap-2 lg:gap-4 flex-wrap lg:flex-nowrap">
               <Form.Item
                 label={
                   <p className="font-tenor font-normal">
@@ -235,7 +233,7 @@ const AddressCard = () => {
                   </p>
                 }
                 name={"street"}
-                className="!w-3/4"
+                className="lg:!w-3/4 w-full"
               >
                 <Input className="!h-12" />
               </Form.Item>
@@ -246,7 +244,7 @@ const AddressCard = () => {
                   </p>
                 }
                 name={"houseNumber"}
-                className="!w-1/4"
+                className="lg:!w-1/4"
               >
                 <Input className="!h-12" />
               </Form.Item>

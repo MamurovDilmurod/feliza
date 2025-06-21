@@ -47,14 +47,14 @@ const OrderStepper = ({ status }) => {
             {/* Connecting line */}
             {index !== 0 && (
               <div
-                className={`absolute top-2.5 left-[-50%] w-full h-0.5 
+                className={`absolute top-2.5 left-[-50%] w-full h-0.5 z-10
                   ${isCompleted ? "bg-black" : "bg-gray-300"}`}
               />
             )}
 
             {/* Circle */}
             <div
-              className={`w-5 h-5 rounded-full flex items-center justify-center z-10
+              className={`w-5 h-5 rounded-full flex items-center justify-center z-20
                 ${
                   isRejected
                     ? "bg-red-500 text-white"
