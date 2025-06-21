@@ -459,7 +459,7 @@ function ProductDetail() {
                                         disabled
                                         className="w-full h-12 border border-black bg-gray-200 text-gray-500 cursor-not-allowed"
                                     >
-                                        {i18n.language === 'uz' ? "Mahsulot qolmagan" : "Нет в наличии"}
+                                        {i18n.language === 'uz' ? "MahsuFlot qolmagan" : "Нет в наличии"}
                                     </button>
                                 ) : (
                                     <button
