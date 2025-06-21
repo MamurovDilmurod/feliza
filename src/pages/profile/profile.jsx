@@ -4,10 +4,10 @@ import { MobileProfileCard } from "../../components/profile/mobile-profile-card"
 const Profile = () => {
   return (
     <div className="">
-      <div className="block lg:hidden">
+      <div className="block lg:hidden font-tenor">
         <MobileProfileCard />
       </div>
-      <div className="hidden lg:block">
+      <div className="hidden lg:block font-tenor">
         <DesktopProfileCard />
       </div>
     </div>

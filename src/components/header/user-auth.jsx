@@ -72,7 +72,6 @@ const UserAuth = () => {
         </div>
       )}
       <Drawer
-        // title="Basic Drawer"
         closable={{ "aria-label": "Close Button" }}
         onClose={onClose}
         open={open}

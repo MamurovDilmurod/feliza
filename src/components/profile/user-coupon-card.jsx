@@ -7,13 +7,12 @@ import { RiCoupon2Line } from "react-icons/ri";
 
 const UserCouponCard = () => {
   const userID = Cookies.get("USER-ID");
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
   const { data, isLoading } = useGetById(
     "/api/couponCustomer/getCouponsByCustomerId/",
     userID
   );
 
-  console.log(data);
   if (isLoading) {
     return <Spin />;
   }
@@ -38,7 +37,6 @@ const UserCouponCard = () => {
           <div className="pt-6 border-t border-secondary text-center lg:w-4/6">
             <p className="font-tenor font-normal text-sm text-secondary">
               {t("profile.coupons.desc")}
-
             </p>
           </div>
         </div>

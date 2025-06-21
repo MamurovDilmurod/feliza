@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 export const StatusCard = () => {
   const userID = Cookies.get("USER-ID");
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
   const { data } = useGetById("/api/customers/getCustomerById/", userID);
 
   console.log(data);

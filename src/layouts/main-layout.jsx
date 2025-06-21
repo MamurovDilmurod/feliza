@@ -14,7 +14,7 @@ const MainLayout = () => {
       </main>
       <footer>
         <Footer />
-        <div className="w-full fixed bottom-0">
+        <div className="w-full fixed bottom-0 z-30">
           <MobileBottomTab />
         </div>
       </footer>

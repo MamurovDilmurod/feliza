@@ -18,7 +18,6 @@ import axios from "axios";
 import { PiLockKey } from "react-icons/pi";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { toast } from "react-toastify";
 
 export const ProfileInfoCard = () => {
   const token = Cookies.get("FELIZA-TOKEN");
@@ -36,7 +35,6 @@ export const ProfileInfoCard = () => {
     isLoading,
   } = useGetById("/api/customers/getCustomerById/", userID);
 
-  console.log(userData);
   const { mutate, isPending } = useUpdateById(
     "/api/customers/editCustomer/",
     "/api/customers/getCustomerById/"
@@ -76,7 +74,7 @@ export const ProfileInfoCard = () => {
   };
 
   if (isLoading) {
-    return <>load</>;
+    return <></>;
   }
   return (
     <div>

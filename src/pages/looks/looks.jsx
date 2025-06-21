@@ -17,7 +17,7 @@ const Looks = () => {
   const [gridMobile, setGridMobile] = useState(2);
   return (
     <div className="p-1 bg-background">
-      <div className="py-5 lg:py-10 space-y-4">
+      <div className="py-5 lg:py-10 space-y-4 bg-white">
         <div className="flex justify-between lg:justify-center">
           <h1 className="font-tenor font-normal text-2xl text-primary text-center">
             {t("looks.title")}

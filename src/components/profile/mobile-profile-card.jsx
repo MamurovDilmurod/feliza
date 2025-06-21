@@ -1,9 +1,9 @@
 import Cookies from "js-cookie";
 import { useGetById } from "../../services/query/useGetById";
-import { Button, Flex, Modal, Tabs } from "antd";
+import { Button, Modal } from "antd";
 import { FaSignOutAlt } from "react-icons/fa";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { BiUserCircle } from "react-icons/bi";
 import {
@@ -23,10 +23,9 @@ import { StatusCard } from "./status-card";
 import { useTranslation } from "react-i18next";
 import { CommentsCard } from "./comments-card";
 import logo from "../../assets/images/loading-logo.png";
+import { OrderShortShower } from "./order-short-shower";
 export const MobileProfileCard = () => {
   const { t, i18n } = useTranslation();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get("tab");
   const userID = Cookies.get("USER-ID");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -161,13 +160,17 @@ export const MobileProfileCard = () => {
                     </div>
                   </div>
                 </div>
+                <OrderShortShower />
 
                 {/* Tabs */}
                 <div className="mt-2 space-y-1">
                   {profileItems.map((item, index) => (
                     <button
                       key={index}
-                      onClick={() => navigate(item.path)}
+                      onClick={() => (
+                        navigate(item.path),
+                        window.scrollTo({ top: 0, behavior: "smooth" })
+                      )}
                       className={`cursor-pointer duration-300 w-full flex items-center gap-3 px-4 py-2 transition-all
                       ${"text-secondary hover:bg-white/10 border-l-2 border-transparent"}`}
                     >

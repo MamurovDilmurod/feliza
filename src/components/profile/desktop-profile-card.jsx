@@ -1,11 +1,11 @@
 import Cookies from "js-cookie";
 import { useGetById } from "../../services/query/useGetById";
-import { Button, Flex, Modal, Tabs } from "antd";
+import { Button, Modal } from "antd";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import { BiUserCheck, BiUserCircle } from "react-icons/bi";
+import { BiUserCircle } from "react-icons/bi";
 import {
   PiChatCenteredDotsLight,
   PiEnvelopeSimpleOpen,
@@ -23,9 +23,10 @@ import { StatusCard } from "./status-card";
 import { useTranslation } from "react-i18next";
 import { CommentsCard } from "./comments-card";
 import { MyOrderCard } from "./my-order-card";
+import { OrderShortShower } from "./order-short-shower";
 
 export const DesktopProfileCard = () => {
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab");
   const userID = Cookies.get("USER-ID");
@@ -101,7 +102,7 @@ export const DesktopProfileCard = () => {
   return (
     <div className="max-w-[1280px] mx-auto relative">
       <div className="hidden lg:block">
-        <div className="flex h-screen bg-background">
+        <div className="flex bg-background">
           {/* Left Sidebar */}
           <div
             className={`w-[390px] bg-[url(${userData?.image?.url})]  text-white flex flex-col gap-20 justify-between`}
@@ -139,6 +140,7 @@ export const DesktopProfileCard = () => {
                   </div>
                 </div>
               </div>
+              <OrderShortShower />
 
               {/* Tabs */}
               <div className="mt-2 space-y-1">
@@ -154,7 +156,7 @@ export const DesktopProfileCard = () => {
                 }`}
                   >
                     {item.icon}
-                    <span className="text-sm">{t(item.label)}</span>
+                    <span className="text-sm font-tenor">{t(item.label)}</span>
                   </button>
                 ))}
               </div>
@@ -175,11 +177,17 @@ export const DesktopProfileCard = () => {
           </div>
 
           {/* Right Content */}
-          <div className="flex-1 p-6 bg-white overflow-auto h-full">
+          <div className="flex-1 p-6 bg-white overflow-auto h-full max-h-screen">
             {currentTab ? (
               currentTab.children
             ) : (
-              <div className="text-gray-500">Iltimos, bo‘lim tanlang.</div>
+              <div className="text-gray-500">
+                <h1>
+                  {i18n.language == "uz"
+                    ? "Iltimos, bo‘lim tanlang!"
+                    : "Пожалуйста, выберите раздел."}
+                </h1>
+              </div>
             )}
           </div>
         </div>
