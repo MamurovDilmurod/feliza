@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { IoIosInformationCircleOutline } from "react-icons/io";
 export const StatusCard = () => {
   const userID = Cookies.get("USER-ID");
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
   const { data } = useGetById("/api/customers/getCustomerById/", userID);
 
   console.log(data);
@@ -15,7 +15,8 @@ export const StatusCard = () => {
         <div className="">
           <div className="space-y-3 pt-10 pb-20">
             <h1 className="font-tenor font-normal text-4xl text-center">
-              0 <span className="text-lg">{t("profile.status.ball")}</span>
+              {data?.cashback ? data?.cashback : 0}{" "}
+              <span className="text-lg">{t("profile.status.ball")}</span>
             </h1>
             <h1 className="font-tenor font-normal text-base text-secondary">
               {t("profile.status.status")}: {data?.status?.statusName}

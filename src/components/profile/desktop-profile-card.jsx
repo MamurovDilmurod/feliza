@@ -1,17 +1,18 @@
 import Cookies from "js-cookie";
 import { useGetById } from "../../services/query/useGetById";
-import { Button, Flex, Modal, Tabs } from "antd";
+import { Button, Modal } from "antd";
 import { FaSignOutAlt } from "react-icons/fa";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMemo, useState } from "react";
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import { BiUserCheck, BiUserCircle } from "react-icons/bi";
+import { BiUserCircle } from "react-icons/bi";
 import {
   PiChatCenteredDotsLight,
   PiEnvelopeSimpleOpen,
   PiMapPinLine,
   PiPackage,
   PiShootingStar,
+  PiUser,
 } from "react-icons/pi";
 import { RiCoupon2Line } from "react-icons/ri";
 import { ProfileInfoCard } from "./profile-info-card";
@@ -21,9 +22,11 @@ import UserCouponCard from "./user-coupon-card";
 import { StatusCard } from "./status-card";
 import { useTranslation } from "react-i18next";
 import { CommentsCard } from "./comments-card";
+import { MyOrderCard } from "./my-order-card";
+import { OrderShortShower } from "./order-short-shower";
 
 export const DesktopProfileCard = () => {
-  const { t } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get("tab");
   const userID = Cookies.get("USER-ID");
@@ -57,7 +60,7 @@ export const DesktopProfileCard = () => {
     {
       label: "profile.tabs.orders",
       icon: <PiPackage size={24} />,
-      children: <>child 2</>,
+      children: <MyOrderCard />,
       key: "orders",
     },
     {
@@ -99,10 +102,10 @@ export const DesktopProfileCard = () => {
   return (
     <div className="max-w-[1280px] mx-auto relative">
       <div className="hidden lg:block">
-        <div className="flex h-screen bg-background">
+        <div className="flex bg-background">
           {/* Left Sidebar */}
           <div
-            className={`w-[390px] bg-[url(${userData?.image.url})]  text-white flex flex-col gap-20 justify-between`}
+            className={`w-[390px] bg-[url(${userData?.image?.url})]  text-white flex flex-col gap-20 justify-between`}
           >
             {/* Profile Info */}
             <div className="border">
@@ -110,7 +113,9 @@ export const DesktopProfileCard = () => {
                 <div
                   className="w-full h-full max-w-[390px] max-h-[200px] min-w-[390px] min-h-[200px]"
                   style={{
-                    backgroundImage: `url(${userData?.image.url})`,
+                    background: "#444",
+                    backgroundImage:
+                      userData?.image?.url && `url(${userData?.image?.url})`,
                     backgroundSize: "cover",
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "center",
@@ -118,17 +123,24 @@ export const DesktopProfileCard = () => {
                   }}
                 ></div>
                 <div className="absolute top-0 h-full flex flex-col items-center justify-center gap-2 mx-auto w-full z-30 text-center">
-                  <img
-                    src={userData?.image.url}
-                    alt="Profile"
-                    className="w-20 h-20 rounded-full object-cover border-4 border-white"
-                  />
+                  {userData?.image?.url ? (
+                    <img
+                      src={userData?.image?.url}
+                      alt="Profile"
+                      className="w-20 h-20 rounded-full object-cover border-4 border-white"
+                    />
+                  ) : (
+                    <div className="border-2 size-20 rounded-full flex justify-center items-center">
+                      <PiUser size={36} />
+                    </div>
+                  )}
                   <div className="text-lg font-semibold">
                     <h1>{userData?.fullName}</h1>
                     <p>{userData?.status?.statusName}</p>
                   </div>
                 </div>
               </div>
+              <OrderShortShower />
 
               {/* Tabs */}
               <div className="mt-2 space-y-1">
@@ -144,7 +156,7 @@ export const DesktopProfileCard = () => {
                 }`}
                   >
                     {item.icon}
-                    <span className="text-sm">{t(item.label)}</span>
+                    <span className="text-sm font-tenor">{t(item.label)}</span>
                   </button>
                 ))}
               </div>
@@ -165,17 +177,21 @@ export const DesktopProfileCard = () => {
           </div>
 
           {/* Right Content */}
-          <div className="flex-1 p-6 bg-white overflow-auto h-full">
+          <div className="flex-1 p-6 bg-white overflow-auto h-full max-h-screen">
             {currentTab ? (
               currentTab.children
             ) : (
-              <div className="text-gray-500">Iltimos, bo‘lim tanlang.</div>
+              <div className="text-gray-500">
+                <h1>
+                  {i18n.language == "uz"
+                    ? "Iltimos, bo‘lim tanlang!"
+                    : "Пожалуйста, выберите раздел."}
+                </h1>
+              </div>
             )}
           </div>
         </div>
       </div>
-
-      
 
       <Modal
         open={open}

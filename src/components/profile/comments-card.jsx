@@ -6,6 +6,7 @@ import { formatDate } from "../../utils/formatDate";
 import { PiPlus } from "react-icons/pi";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const CommentsCard = () => {
   const userID = Cookies.get("USER-ID");
@@ -13,12 +14,16 @@ export const CommentsCard = () => {
   const [fileList, setFileList] = useState([]);
   const [selectedProductId, setselectedProductId] = useState("");
   const { i18n, t } = useTranslation();
-  const { data, isLoading } = useGetById(
-    "/api/review/getReviewsByCustomerId/",
-    userID
-  );
-  const { data: unreviewedComment, isLoading: unreviewedCommentLoading } =
-    useGetById("/api/review/getUnreviewedByCustomerId/", userID);
+  const {
+    data,
+    isLoading,
+    refetch: reviewCommentFetch,
+  } = useGetById("/api/review/getReviewsByCustomerId/", userID);
+  const {
+    data: unreviewedComment,
+    isLoading: unreviewedCommentLoading,
+    refetch,
+  } = useGetById("/api/review/getUnreviewedByCustomerId/", userID);
 
   if (isLoading || unreviewedCommentLoading) {
     return <Spin />;
@@ -26,7 +31,9 @@ export const CommentsCard = () => {
   const selectedProduct = unreviewedComment?.filter(
     (item) => item?.productResponse?.id === selectedProductId
   );
+  console.log(data);
 
+  
   return (
     <div>
       <Tabs
@@ -36,55 +43,63 @@ export const CommentsCard = () => {
             label: t("profile.modal.add-comment.tab1"),
             children: (
               <div className="">
-                {unreviewedComment?.map((item) => (
-                  <div className="">
-                    <div className="w-full border-b flex gap-2 p-6">
-                      <img
-                        className="w-16"
-                        src={item?.productResponse?.productImages[0]?.url}
-                        alt=""
-                      />
+                {unreviewedComment?.lenght != 0 ? (
+                  unreviewedComment?.map((item) => (
+                    <div className="">
+                      <div className="w-full border-b flex gap-2 p-6">
+                        <img
+                          className="w-16"
+                          src={item?.productResponse?.productImages[0]?.url}
+                          alt=""
+                        />
 
-                      <div className="flex flex-col gap-3 font-tenor font-normal w-full">
-                        <h1 className="text-primary text-base">
-                          {i18n.language == "uz"
-                            ? item.productResponse?.nameUZB
-                            : item.productResponse?.nameUZB}
-                        </h1>
-
-                        <div className="flex items-center gap-4 text-accent text-sm">
-                          <h1>
-                            {t("cart.color") + ": "}
+                        <div className="flex flex-col gap-3 font-tenor font-normal w-full">
+                          <h1 className="text-primary text-base">
                             {i18n.language == "uz"
-                              ? item.productResponse?.color?.nameUZB
-                              : item.productResponse?.color?.nameUZB}
+                              ? item.productResponse?.nameUZB
+                              : item.productResponse?.nameUZB}
                           </h1>
-                          <h1>
-                            {t("cart.size")}: {item?.size}
-                          </h1>
-                        </div>
 
-                        <div className="w-full text-center">
-                          <Button
-                            className="!border-none !font-tenor !font-normal !text-base !text-primary"
-                            icon={<PiPlus />}
-                            children={t("profile.modal.add-comment.title")}
-                            onClick={() => (
-                              setselectedProductId(item?.productResponse?.id),
-                              setIsModalOpen(true)
-                            )}
-                          />
+                          <div className="flex items-center gap-4 text-accent text-sm">
+                            <h1>
+                              {t("cart.color") + ": "}
+                              {i18n.language == "uz"
+                                ? item.productResponse?.color?.nameUZB
+                                : item.productResponse?.color?.nameUZB}
+                            </h1>
+                            <h1>
+                              {t("cart.size")}: {item?.size}
+                            </h1>
+                          </div>
+
+                          <div className="w-full text-center">
+                            <Button
+                              className="!border-none !font-tenor !font-normal !text-base !text-primary"
+                              icon={<PiPlus />}
+                              children={t("profile.modal.add-comment.title")}
+                              onClick={() => (
+                                setselectedProductId(item?.productResponse?.id),
+                                setIsModalOpen(true)
+                              )}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="">
+                    <h1 className="font-tenor font-normal text-lg text-primary">
+                      {t("profile.comments.empty")}
+                    </h1>
                   </div>
-                ))}
+                )}
               </div>
             ),
           },
           {
             key: "2",
-            label: t("profile.modal.add-comment.tab1"),
+            label: t("profile.modal.add-comment.tab2"),
             children: (
               <div className="">
                 {data?.map((item) => (
@@ -117,7 +132,7 @@ export const CommentsCard = () => {
                     </div>
 
                     <div className="w-full flex gap-2">
-                      {item.images.map((item) => (
+                      {item?.images?.map((item) => (
                         <img className="w-16" src={item.url} alt="" />
                       ))}
                     </div>
@@ -131,6 +146,13 @@ export const CommentsCard = () => {
             ),
           },
         ]}
+        tabBarStyle={{
+          position: "sticky",
+          top: -25,
+          background: "#fff",
+          zIndex: 35,
+          marginTop: 0,
+        }}
       />
 
       <Modal
@@ -203,6 +225,13 @@ export const CommentsCard = () => {
               );
               console.log("Yuborildi!");
               setIsModalOpen(false);
+              refetch();
+              reviewCommentFetch();
+              toast.success(
+                i18n.language == "uz"
+                  ? "Sharh muvaffaqiyatli qo'shildi!"
+                  : "Комментарий успешно добавлен!"
+              );
             } catch (err) {
               console.log("Xatolik yuz berdi!", err);
             }

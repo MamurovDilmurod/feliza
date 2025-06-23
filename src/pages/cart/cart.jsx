@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useGetList } from "../../services/query/useGetList";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { Button, Checkbox, Drawer, message, Modal } from "antd";
@@ -519,6 +518,13 @@ const Cart = () => {
                 {quantityEdit}
               </p>
               <Button
+                disabled={
+                  filteredProduct[0]?.productSizeVariantList?.find(
+                    (item) => item.id === selectedEditProductSize
+                  )?.quantity <= quantityEdit
+                    ? true
+                    : false
+                }
                 icon={<PiPlus color="#0d0d0d" />}
                 onClick={() => setquantityEdit(quantityEdit + 1)}
               />

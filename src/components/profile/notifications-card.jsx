@@ -18,7 +18,6 @@ export const NotificationsCard = () => {
     "/api/notification/getNotificationsForCustomer/"
   );
 
-  console.log(notifications);
   return (
     <div>
       <div className="flex gap-4 flex-col">
