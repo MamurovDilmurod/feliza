@@ -26,7 +26,7 @@ function ContactPage() {
 
                 {/* Email */}
                 <div className='flex items-center gap-4 p-2 hover:scale-105 transition duration-300'>
-                    <CgMail className='md:text-3xl text-2xl text-red-500' />
+                    <CgMail className='md:text-3xl text-2xl text-black' />
                     <a href="mailto:feliz.uz@gmail.com" className='text-base sm:text-lg hover:underline'>
                         feliz.uz@gmail.com
                     </a>

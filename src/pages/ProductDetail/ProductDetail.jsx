@@ -44,7 +44,9 @@ function ProductDetail() {
         const selectedColorVariant = productVariants?.[selectedColorIndex];
 
         if (!selectedColorVariant) {
-            toast.error(i18n.language === 'uz' ? "Iltimos, rang tanlang" : "Пожалуйста, выберите цвет");
+            toast.error(i18n.language === 'uz' ? "Iltimos, rang tanlang" : "Пожалуйста, выберите цвет", {
+                autoClose: 1000,
+            });
             return;
         }
 
@@ -54,11 +56,11 @@ function ProductDetail() {
         );
 
         if (!selectedSizeVariant) {
-            toast.error(i18n.language === 'uz' ? "Iltimos, razmer tanlang" : "Пожалуйста, выберите размер");
+            toast.error(i18n.language === 'uz' ? "Iltimos, razmer tanlang" : "Пожалуйста, выберите размер", {
+                autoClose: 1000,
+            });
             return;
         }
-        //  Tanlangan rang variantini olish
-
         //  Mutate funksiyasini chaqirish
         mutate({
             customerId: userID,
@@ -67,47 +69,66 @@ function ProductDetail() {
         }, {
             onSuccess: (data) => {
                 console.log("Savatga qo'shildi:", data);
-                toast.success(i18n.language === 'uz' ? `Mahsulot savatga qo‘shildi` : "Товар добавлен в корзину");
+                toast.success(i18n.language === 'uz' ? `Mahsulot savatga qo‘shildi` : "Товар добавлен в корзину", {
+                    autoClose: 1000,
+                });
                 setCount(1);
             },
             onError: (error) => {
                 console.error("Xatolik korish :", error);
-                toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему");
+                toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему", {
+                    autoClose: 1000,
+                });
             }
         });
     };
 
     // sotib olish funksiyasi
     const addOrder = () => {
-        const selectedColorVariant = productVariants?.[selectedColorIndex];
-
-        if (!selectedColorVariant) {
-            toast.error(i18n.language === 'uz' ? "Iltimos, rang tanlang" : "Пожалуйста, выберите цвет");
+        if (!userID) {
+            toast.error(
+                i18n.language === 'uz' ? "Iltimos, ro'yxatdan o'ting" : "Пожалуйста, войдите в систему",
+                { autoClose: 1000 }
+            );
             return;
         }
 
-        //  Tanlangan razmerga mos productSizeVariant ni topish
+        const selectedColorVariant = productVariants?.[selectedColorIndex];
+
+        if (!selectedColorVariant) {
+            toast.error(i18n.language === 'uz' ? "Iltimos, rang tanlang" : "Пожалуйста, выберите цвет", {
+                autoClose: 1000,
+            });
+            return;
+        }
+
         const selectedSizeVariant = selectedColorVariant.productSizeVariantList?.find(
             (variant) => variant.size === selectedSize
         );
 
         if (!selectedSizeVariant) {
-            toast.error(i18n.language === 'uz' ? "Iltimos, razmer tanlang" : "Пожалуйста, выберите размер");
+            toast.error(i18n.language === 'uz' ? "Iltimos, razmer tanlang" : "Пожалуйста, выберите размер", {
+                autoClose: 1000,
+            });
             return;
         }
+
         mutate({
             customerId: userID,
             productSizeVariantId: selectedSizeVariant.id,
             quantity: count,
         }, {
             onSuccess: (data) => {
-                setcartItemId(data.cartItemId)
+                setcartItemId(data.cartItemId);
             },
-            onError: (error) => {
-                console.error("Xatolik korish :", error);
+            onError: () => {
+                toast.error(i18n.language === 'uz' ? "Xatolik yuz berdi" : "Произошла ошибка", {
+                    autoClose: 1000,
+                });
             }
-        })
-    }
+        });
+    };
+
 
 
     //  sevimlilar qoshish funksiyasi
@@ -115,7 +136,9 @@ function ProductDetail() {
         const selectedColorVariant = productVariants?.[selectedColorIndex];
 
         if (!selectedColorVariant) {
-            toast.error(i18n.language === 'uz' ? "Iltimos, rang tanlang" : "Пожалуйста, выберите цвет");
+            toast.error(i18n.language === 'uz' ? "Iltimos, rang tanlang" : "Пожалуйста, выберите цвет", {
+                autoClose: 1000,
+            });
             return;
         }
 
@@ -124,7 +147,9 @@ function ProductDetail() {
         );
 
         if (!selectedSizeVariant) {
-            toast.error(i18n.language === 'uz' ? "Iltimos, razmer tanlang" : "Пожалуйста, выберите размер");
+            toast.error(i18n.language === 'uz' ? "Iltimos, razmer tanlang" : "Пожалуйста, выберите размер", {
+                autoClose: 1000,
+            });
             return;
         }
 
@@ -132,7 +157,9 @@ function ProductDetail() {
         const productId = selectedColorVariant?.id;
 
         if (!productId) {
-            toast.error(i18n.language === 'uz' ? "Mahsulot topilmadi" : "Товар не найден");
+            toast.error(i18n.language === 'uz' ? "Mahsulot topilmadi" : "Товар не найден", {
+                autoClose: 1000,
+            });
             return;
         }
 
@@ -144,11 +171,15 @@ function ProductDetail() {
             {
                 onSuccess: (data) => {
                     console.log("Sevimlilarga qo'shildi:", data);
-                    toast.success(i18n.language === 'uz' ? `Mahsulot sevimlilarga qo‘shildi` : "Товар добавлен в избранное");
+                    toast.success(i18n.language === 'uz' ? `Mahsulot sevimlilarga qo‘shildi` : "Товар добавлен в избранное", {
+                        autoClose: 1000,
+                    });
                 },
                 onError: (error) => {
                     console.error("Xatolik:", error);
-                    toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему");
+                    toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему", {
+                        autoClose: 1000,
+                    });
                 }
             }
         );
@@ -387,7 +418,7 @@ function ProductDetail() {
                                             });
                                         }
                                     }}
-                                    className="p-2 border border-gray-300 text-gray-700 hover:bg-red-500 hover:text-white transition duration-300 flex items-center justify-center"
+                                    className="p-2 border border-gray-300 text-gray-700 cursor-pointer hover:bg-red-500 hover:text-white transition duration-300 flex items-center justify-center"
                                     title="Sevimlilar"
                                 >
                                     <FaRegHeart className="text-2xl" />
@@ -464,14 +495,20 @@ function ProductDetail() {
                                 ) : (
                                     <button
                                         onClick={() => {
+                                            if (!userID) {
+                                                toast.error(
+                                                    i18n.language === 'uz' ? "Iltimos, ro'yxatdan o'ting" : "Пожалуйста, войдите в систему",
+                                                    { autoClose: 1000 }
+                                                );
+                                                return;
+                                            }
                                             setDrawerOpen(true);
                                             addOrder();
                                         }}
+
                                         className="w-full h-12 border border-black hover:bg-black cursor-pointer hover:text-white flex items-center justify-center gap-2 transition duration-300"
                                     >
-                                        <span>
-                                            {i18n.language === 'uz' ? "Sotib olish" : "Купить"}
-                                        </span>
+                                        {i18n.language === 'uz' ? "Sotib olish" : "Купить"}
                                     </button>
                                 )
                             }

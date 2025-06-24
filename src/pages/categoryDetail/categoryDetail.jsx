@@ -73,7 +73,7 @@ function CategoryDetail() {
                             loadMoreProducts();
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className='py-2 px-16 border border-[#5B5B5B] cursor-pointer rounded-sm hover:bg-[#5B5B5B] hover:text-white transition-colors duration-500'
+                        className='py-2 px-16 border border-[#5B5B5B] cursor-pointer hover:bg-[#5B5B5B] hover:text-white transition-colors duration-500'
                         disabled={isFetching}
                     >
                         {i18n.language === 'uz' ? 'Yana ko‘proq ko‘rish' :

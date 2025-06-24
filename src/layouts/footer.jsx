@@ -4,6 +4,9 @@ import { RiTelegram2Line } from "react-icons/ri";
 import { IoLogoYoutube } from "react-icons/io";
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from 'react-router-dom';
+import { TiVendorApple } from "react-icons/ti";
+import { FaGooglePlay } from "react-icons/fa6";
+
 
 const Footer = () => {
   const { i18n } = useTranslation();
@@ -83,31 +86,37 @@ const Footer = () => {
         </Link>
       </div>
 
-      {/* Footer Links 2 */}
-      <div className='flex flex-wrap justify-center gap-x-6 gap-y-3 pt-4 md:pb-7 text-center'>
-        <Link to="/faq" className='text-[#0D0D0D] hover:underline cursor-pointer'>
-          {i18n.language === 'uz' ? 'Ko’p so’raladigan savollar' : 'Часто задаваемые вопросы'}
-        </Link>
+      {/* Apple and play market icon download */}
+      <div className="flex sm:flex-row gap-4 items-center justify-center md:pb-0 mb-5 md:pt-7 pt-5">
+        {/* Apple Store */}
+        <a
+          href="https://apps.apple.com/uz/app/feliza/id6742327578F"
+          className="flex items-center gap-3 px-4 py-2 bg-black text-white rounded-sm hover:scale-105 transition-transform shadow-md"
+          target='_blank'
+        >
+          <TiVendorApple size={30} />
+          <div className="text-left">
+            <p className="text-xs">Download on the</p>
+            <p className="text-sm font-semibold">App Store</p>
+          </div>
+        </a>
 
-        <Link to="/delivery" className='text-[#0D0D0D] hover:underline cursor-pointer'>
-          {i18n.language === 'uz' ? 'Yetkazib berish' : 'Доставка'}
-        </Link>
-
-        <Link to="/returns" className='text-[#0D0D0D] hover:underline cursor-pointer'>
-          {i18n.language === 'uz' ? 'Qaytarib olish' : 'Возврат'}
-        </Link>
-
-        <Link to="/payment" className='text-[#0D0D0D] hover:underline cursor-pointer'>
-          {i18n.language === 'uz' ? 'To’lov' : 'Оплата'}
-        </Link>
-
-        <Link to="/career" className='text-[#0D0D0D] hover:underline cursor-pointer'>
-          {i18n.language === 'uz' ? 'Karera' : 'Карьера'}
-        </Link>
+        {/* Google Play */}
+        <a
+          href="https://play.google.com/store/apps/details?id=uz.feliza.mobile&pcampaignid=web_share"
+          className="flex items-center gap-3 px-4 py-2 bg-black text-white rounded-sm hover:scale-105 transition-transform shadow-md"
+          target='_blank'
+        >
+          <FaGooglePlay size={25} />
+          <div className="text-left">
+            <p className="text-xs">Get it on</p>
+            <p className="text-sm font-semibold">Google Play</p>
+          </div>
+        </a>
       </div>
 
       {/* Copyright */}
-      <div className='flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-10 md:pt-10 pt-7 pb-10  md:pb-0 text-center text-sm sm:text-base'>
+      <div className='flex sm:flex-row items-center justify-center gap-2 sm:gap-10 pt-3 pb-12  md:pb-0 text-center text-sm sm:text-base'>
         <span>{
           i18n.language === 'uz' ? '© Feliza 2025' : '© Feliza 2025'
         }</span>

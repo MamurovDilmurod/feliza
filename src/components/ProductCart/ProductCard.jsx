@@ -52,6 +52,13 @@ const ProductCard = ({ item, onLike }) => {
 
     // karzina qoshish
     const addToCart = () => {
+
+        if (!userID) {
+            toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему", {
+                autoClose: 1000
+            });
+            return;
+        }
         const selectedColorVariant = productVariants[selectedColorIndex];
         const selectedSizeVariant = selectedColorVariant?.productSizeVariantList.find(
             (item) => item.size === selectedSize
@@ -120,8 +127,10 @@ const ProductCard = ({ item, onLike }) => {
                     setcartItemId(data.cartItemId);
                     setDrawerOpen(true); // ✅ Drawer ochiladi
                 },
-                onError: (error) => {
-                    console.error("Xatolik:", error);
+                onError: () => {
+                    toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему", {
+                        autoClose: 1000
+                    });
                 },
             }
         );
@@ -132,7 +141,9 @@ const ProductCard = ({ item, onLike }) => {
     const addToFavorites = () => {
         // agar foydalanuvchi ro`yhatdan o`tmagan bo`lsa
         if (!userID) {
-            toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему");
+            toast.error(i18n.language === 'uz' ? "Iltimos,ro'yxatdan o'ting" : "Пожалуйста, войдите в систему", {
+                autoClose: 1000
+            });
             return;
         }
         mutate({
